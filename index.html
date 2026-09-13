@@ -1,0 +1,2425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Quadratic Roots & Projectile Motion Visualizer</title>
+
+<style>
+
+:root {
+  --bg: #090b10;
+  --panel: #151922;
+  --panel2: #10141c;
+  --border: #2b3444;
+
+  --text: #f4f6fb;
+  --muted: #aeb8c9;
+
+  --blue: #83bdff;
+  --green: #8ee3b4;
+  --red: #ff9aa8;
+  --yellow: #ffd479;
+  --purple: #c7a7ff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Arial,
+    sans-serif;
+}
+
+.page {
+  max-width: 1180px;
+  margin: auto;
+  padding: 24px 18px 50px;
+}
+
+h1 {
+  margin: 0 0 8px;
+  font-size: 30px;
+}
+
+.subtitle {
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.card {
+  background:
+    linear-gradient(
+      180deg,
+      var(--panel),
+      var(--panel2)
+    );
+
+  border: 1px solid var(--border);
+  border-radius: 18px;
+
+  padding: 18px;
+  margin-bottom: 18px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 0.72fr 1.28fr;
+  gap: 18px;
+}
+
+.sectionTitle {
+  font-weight: 700;
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+button {
+  background: #171d28;
+  color: var(--text);
+
+  border: 1px solid var(--border);
+
+  border-radius: 12px;
+
+  padding: 11px 14px;
+
+  min-height: 44px;
+
+  cursor: pointer;
+
+  font-size: 15px;
+}
+
+button:hover {
+  filter: brightness(1.08);
+}
+
+button.primary {
+  background: var(--blue);
+  color: #08111d;
+  font-weight: 700;
+}
+
+button.active {
+  background: var(--blue);
+  color: #08111d;
+  font-weight: 700;
+}
+
+button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.sliderRow {
+  margin-top: 14px;
+}
+
+.sliderTop {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+
+  align-items: center;
+
+  margin-bottom: 8px;
+}
+
+input[type="range"] {
+  width: 100%;
+  accent-color: var(--blue);
+}
+
+.status {
+  border-radius: 14px;
+
+  padding: 13px 14px;
+
+  min-height: 58px;
+
+  margin-top: 14px;
+
+  line-height: 1.5;
+}
+
+.status.two {
+  background: rgba(142, 227, 180, 0.09);
+  color: var(--green);
+}
+
+.status.one {
+  background: rgba(255, 212, 121, 0.09);
+  color: var(--yellow);
+}
+
+.status.none {
+  background: rgba(255, 154, 168, 0.09);
+  color: var(--red);
+}
+
+.mathLine {
+  margin-top: 14px;
+
+  text-align: center;
+
+  font-size: 20px;
+  font-weight: 700;
+
+  color: var(--blue);
+}
+
+.metricGrid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 10px;
+
+  margin-top: 14px;
+}
+
+.metric {
+  background: #0f141d;
+
+  border: 1px solid var(--border);
+
+  border-radius: 13px;
+
+  padding: 12px;
+}
+
+.metricLabel {
+  color: var(--muted);
+  font-size: 12px;
+  margin-bottom: 5px;
+}
+
+.metricValue {
+  font-size: 20px;
+  font-weight: 750;
+}
+
+.small {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.eventButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+
+  margin-top: 12px;
+}
+
+svg {
+  width: 100%;
+  height: auto;
+
+  display: block;
+
+  background: #0b1017;
+
+  border: 1px solid var(--border);
+  border-radius: 16px;
+
+  touch-action: pan-x pan-y;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 14px;
+
+  margin-top: 10px;
+
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+
+  border-radius: 50%;
+
+  display: inline-block;
+
+  margin-right: 5px;
+}
+
+.explainGrid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 12px;
+}
+
+.explainBox {
+  background: #0f141d;
+
+  border: 1px solid var(--border);
+
+  border-radius: 14px;
+
+  padding: 14px;
+}
+
+.explainBox strong {
+  display: block;
+  margin-bottom: 6px;
+}
+
+@media (max-width: 900px) {
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .explainGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+
+  .page {
+    padding: 16px 10px 36px;
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+
+  .metricGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .controls button,
+  .eventButtons button {
+    flex: 1 1 140px;
+  }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+<h1>
+Quadratic Roots & Projectile Motion Visualizer
+</h1>
+
+<div class="subtitle">
+
+Explore the vertical motion
+
+<strong>y = 10t − 5t²</strong>.
+
+Move the target height and watch the same horizontal level create
+two roots, one repeated root, or no real roots.
+
+</div>
+
+
+<div class="grid">
+
+<!-- LEFT SIDE -->
+
+<div>
+
+
+<div class="card">
+
+<div class="sectionTitle">
+Target height
+</div>
+
+<div class="sliderTop">
+
+<span class="small">
+Drag the target line on the graph or use the slider.
+</span>
+
+<strong id="targetReadout">
+3.75 m
+</strong>
+
+</div>
+
+
+<input
+id="heightSlider"
+type="range"
+min="0"
+max="6.5"
+step="0.05"
+value="3.75"
+/>
+
+
+<div
+class="controls"
+style="margin-top: 12px;"
+>
+
+<button
+type="button"
+data-height="3.75"
+class="active"
+>
+Two roots: 3.75 m
+</button>
+
+<button
+type="button"
+data-height="5"
+>
+One root: 5 m
+</button>
+
+<button
+type="button"
+data-height="6"
+>
+No roots: 6 m
+</button>
+
+</div>
+
+
+<div
+id="rootStatus"
+class="status two">
+</div>
+
+
+<div
+id="equationLine"
+class="mathLine">
+</div>
+
+
+<div class="metricGrid">
+
+<div class="metric">
+
+<div class="metricLabel">
+Discriminant D
+</div>
+
+<div
+id="discValue"
+class="metricValue">
+25
+</div>
+
+</div>
+
+
+<div class="metric">
+
+<div class="metricLabel">
+Maximum height
+</div>
+
+<div class="metricValue">
+5.00 m
+</div>
+
+</div>
+
+
+<div class="metric">
+
+<div class="metricLabel">
+First event
+</div>
+
+<div
+id="root1Value"
+class="metricValue">
+0.50 s
+</div>
+
+</div>
+
+
+<div class="metric">
+
+<div class="metricLabel">
+Second event
+</div>
+
+<div
+id="root2Value"
+class="metricValue">
+1.50 s
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<div class="card">
+
+<div class="sectionTitle">
+Animate the ball
+</div>
+
+
+<div class="controls">
+
+<button
+id="playBtn"
+type="button"
+class="primary"
+>
+Play
+</button>
+
+<button
+id="pauseBtn"
+type="button"
+>
+Pause
+</button>
+
+<button
+id="resetBtn"
+type="button"
+>
+Reset
+</button>
+
+</div>
+
+
+<div class="eventButtons">
+
+<button
+id="jumpFirst"
+type="button"
+>
+Jump to first root
+</button>
+
+<button
+id="jumpVertex"
+type="button"
+>
+Jump to maximum
+</button>
+
+<button
+id="jumpSecond"
+type="button"
+>
+Jump to second root
+</button>
+
+</div>
+
+
+<div class="metricGrid">
+
+<div class="metric">
+
+<div class="metricLabel">
+Time
+</div>
+
+<div
+id="timeValue"
+class="metricValue"
+>
+0.00 s
+</div>
+
+</div>
+
+
+<div class="metric">
+
+<div class="metricLabel">
+Ball height
+</div>
+
+<div
+id="ballHeightValue"
+class="metricValue"
+>
+0.00 m
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+</div>
+
+
+<!-- RIGHT SIDE -->
+
+<div class="card">
+
+<div class="sectionTitle">
+Motion beside the y–t graph
+</div>
+
+
+<svg
+id="viz"
+viewBox="0 0 900 560"
+aria-label="Projectile motion and height-time graph"
+>
+
+<!-- SECTION TITLES -->
+
+<text
+x="110"
+y="42"
+text-anchor="middle"
+fill="#f4f6fb"
+font-size="20"
+font-weight="700"
+>
+Ball motion
+</text>
+
+
+<text
+x="575"
+y="42"
+text-anchor="middle"
+fill="#f4f6fb"
+font-size="20"
+font-weight="700"
+>
+Height–time graph
+</text>
+
+
+
+<!-- ======================
+     BALL MOTION
+====================== -->
+
+<line
+x1="110"
+y1="485"
+x2="110"
+y2="85"
+stroke="#d9e3f0"
+stroke-width="4"
+stroke-linecap="round"
+/>
+
+
+<g id="motionTicks"></g>
+
+
+<line
+id="physicalTarget"
+x1="52"
+y1="255"
+x2="168"
+y2="255"
+stroke="#ffd479"
+stroke-width="3"
+stroke-dasharray="8 7"
+/>
+
+
+<text
+id="physicalTargetLabel"
+x="175"
+y="260"
+fill="#ffd479"
+font-size="15"
+>
+target
+</text>
+
+
+<circle
+id="ball"
+cx="110"
+cy="485"
+r="18"
+fill="#83bdff"
+stroke="#ddecff"
+stroke-width="4"
+/>
+
+
+<text
+id="motionDirection"
+x="110"
+y="525"
+text-anchor="middle"
+fill="#8ee3b4"
+font-size="15"
+>
+rising
+</text>
+
+
+
+<!-- ======================
+     GRAPH AXES
+====================== -->
+
+<line
+x1="290"
+y1="485"
+x2="825"
+y2="485"
+stroke="#d9e3f0"
+stroke-width="3"
+/>
+
+
+<line
+x1="290"
+y1="485"
+x2="290"
+y2="85"
+stroke="#d9e3f0"
+stroke-width="3"
+/>
+
+
+<text
+x="838"
+y="492"
+fill="#f4f6fb"
+font-size="16"
+>
+t
+</text>
+
+
+<text
+x="280"
+y="76"
+fill="#f4f6fb"
+font-size="16"
+>
+y
+</text>
+
+
+<g id="graphTicks"></g>
+
+
+
+<!-- PARABOLA -->
+
+<path
+id="parabola"
+fill="none"
+stroke="#83bdff"
+stroke-width="5"
+stroke-linecap="round"
+/>
+
+
+
+<!-- TARGET LINE -->
+
+<g
+id="targetGroup"
+style="cursor: ns-resize;"
+>
+
+<line
+id="targetLine"
+x1="290"
+y1="255"
+x2="825"
+y2="255"
+stroke="#ffd479"
+stroke-width="4"
+stroke-dasharray="10 8"
+/>
+
+
+<rect
+id="targetHandle"
+x="797"
+y="242"
+width="28"
+height="26"
+rx="7"
+fill="#ffd479"
+/>
+
+
+<text
+id="targetGraphLabel"
+x="790"
+y="238"
+text-anchor="end"
+fill="#ffd479"
+font-size="16"
+>
+target
+</text>
+
+</g>
+
+
+
+<!-- ROOT DOTS -->
+
+<circle
+id="root1Dot"
+r="8"
+fill="#8ee3b4"
+stroke="#eafff2"
+stroke-width="3"
+/>
+
+
+<circle
+id="root2Dot"
+r="8"
+fill="#8ee3b4"
+stroke="#eafff2"
+stroke-width="3"
+/>
+
+
+<text
+id="root1Label"
+fill="#8ee3b4"
+font-size="15"
+>
+</text>
+
+
+<text
+id="root2Label"
+fill="#8ee3b4"
+font-size="15"
+>
+</text>
+
+
+
+<!-- VERTEX -->
+
+<circle
+id="vertexDot"
+r="8"
+fill="#c7a7ff"
+stroke="#f1e9ff"
+stroke-width="3"
+/>
+
+
+<text
+id="vertexLabel"
+fill="#c7a7ff"
+font-size="15"
+>
+maximum (1 s, 5 m)
+</text>
+
+
+
+<!-- MOVING POINT -->
+
+<line
+id="timeGuide"
+stroke="#7f8ca2"
+stroke-width="2"
+stroke-dasharray="6 6"
+/>
+
+
+<circle
+id="graphBall"
+r="7"
+fill="#f4f6fb"
+/>
+
+</svg>
+
+
+<div class="legend">
+
+<span>
+
+<span
+class="dot"
+style="background: var(--blue);"
+></span>
+
+ball / parabola
+
+</span>
+
+
+<span>
+
+<span
+class="dot"
+style="background: var(--yellow);"
+></span>
+
+target height
+
+</span>
+
+
+<span>
+
+<span
+class="dot"
+style="background: var(--green);"
+></span>
+
+roots
+
+</span>
+
+
+<span>
+
+<span
+class="dot"
+style="background: var(--purple);"
+></span>
+
+turning point
+
+</span>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<div class="card">
+
+<div class="sectionTitle">
+What the discriminant means physically
+</div>
+
+
+<div class="explainGrid">
+
+
+<div class="explainBox">
+
+<strong
+style="color: var(--green);"
+>
+D &gt; 0
+</strong>
+
+<div class="small">
+
+The target line cuts the parabola twice.
+
+The ball reaches the same height once while rising
+and once while falling.
+
+</div>
+
+</div>
+
+
+
+<div class="explainBox">
+
+<strong
+style="color: var(--yellow);"
+>
+D = 0
+</strong>
+
+<div class="small">
+
+The target line touches the parabola once.
+
+The two events merge at the maximum height.
+
+</div>
+
+</div>
+
+
+
+<div class="explainBox">
+
+<strong
+style="color: var(--red);"
+>
+D &lt; 0
+</strong>
+
+<div class="small">
+
+The target lies above the maximum height.
+
+There is no real time when the ball reaches it.
+
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+
+</div>
+
+
+
+<script>
+
+(() => {
+
+
+// ==========================
+// ELEMENTS
+// ==========================
+
+const slider =
+  document.getElementById("heightSlider");
+
+const targetReadout =
+  document.getElementById("targetReadout");
+
+const rootStatus =
+  document.getElementById("rootStatus");
+
+const equationLine =
+  document.getElementById("equationLine");
+
+const discValue =
+  document.getElementById("discValue");
+
+const root1Value =
+  document.getElementById("root1Value");
+
+const root2Value =
+  document.getElementById("root2Value");
+
+const timeValue =
+  document.getElementById("timeValue");
+
+const ballHeightValue =
+  document.getElementById("ballHeightValue");
+
+
+const playBtn =
+  document.getElementById("playBtn");
+
+const pauseBtn =
+  document.getElementById("pauseBtn");
+
+const resetBtn =
+  document.getElementById("resetBtn");
+
+const jumpFirst =
+  document.getElementById("jumpFirst");
+
+const jumpVertex =
+  document.getElementById("jumpVertex");
+
+const jumpSecond =
+  document.getElementById("jumpSecond");
+
+
+const presetButtons =
+  Array.from(
+    document.querySelectorAll("[data-height]")
+  );
+
+
+const svg =
+  document.getElementById("viz");
+
+
+const ball =
+  document.getElementById("ball");
+
+const graphBall =
+  document.getElementById("graphBall");
+
+const timeGuide =
+  document.getElementById("timeGuide");
+
+
+const targetLine =
+  document.getElementById("targetLine");
+
+const targetHandle =
+  document.getElementById("targetHandle");
+
+const targetGroup =
+  document.getElementById("targetGroup");
+
+const targetGraphLabel =
+  document.getElementById("targetGraphLabel");
+
+
+const physicalTarget =
+  document.getElementById("physicalTarget");
+
+const physicalTargetLabel =
+  document.getElementById("physicalTargetLabel");
+
+
+const root1Dot =
+  document.getElementById("root1Dot");
+
+const root2Dot =
+  document.getElementById("root2Dot");
+
+const root1Label =
+  document.getElementById("root1Label");
+
+const root2Label =
+  document.getElementById("root2Label");
+
+
+const vertexDot =
+  document.getElementById("vertexDot");
+
+const vertexLabel =
+  document.getElementById("vertexLabel");
+
+
+const parabola =
+  document.getElementById("parabola");
+
+const motionDirection =
+  document.getElementById("motionDirection");
+
+
+
+// ==========================
+// CONSTANTS
+// ==========================
+
+const GX0 = 290;
+const GX1 = 825;
+
+const GY0 = 485;
+const GY1 = 85;
+
+const TMAX = 2;
+const YMAX = 6.5;
+
+const MOTION_X = 110;
+
+const MOTION_BOTTOM = 485;
+const MOTION_TOP = 85;
+
+
+
+// ==========================
+// STATE
+// ==========================
+
+const state = {
+
+  targetHeight: 3.75,
+
+  time: 0,
+
+  roots: [],
+
+  running: false,
+
+  previousTimestamp: null,
+
+  dragging: false
+
+};
+
+
+
+// ==========================
+// PHYSICS
+// ==========================
+
+function heightAt(t) {
+
+  return 10 * t - 5 * t * t;
+
+}
+
+
+function velocityAt(t) {
+
+  return 10 - 10 * t;
+
+}
+
+
+
+// ==========================
+// GRAPH COORDINATES
+// ==========================
+
+function graphX(t) {
+
+  return GX0 + (t / TMAX) * (GX1 - GX0);
+
+}
+
+
+function graphY(y) {
+
+  return GY0 - (y / YMAX) * (GY0 - GY1);
+
+}
+
+
+function motionY(y) {
+
+  return MOTION_BOTTOM
+    - (y / YMAX)
+    * (MOTION_BOTTOM - MOTION_TOP);
+
+}
+
+
+function clamp(value, minimum, maximum) {
+
+  return Math.max(
+    minimum,
+    Math.min(maximum, value)
+  );
+
+}
+
+
+function nice(value, digits = 2) {
+
+  if (
+    Math.abs(
+      value - Math.round(value)
+    ) < 0.000000001
+  ) {
+
+    return String(
+      Math.round(value)
+    );
+
+  }
+
+  return Number(
+    value.toFixed(digits)
+  ).toString();
+
+}
+
+
+
+// ==========================
+// STATIC DRAWING
+// ==========================
+
+function buildStaticGraph() {
+
+  const motionTicks =
+    document.getElementById("motionTicks");
+
+  const graphTicks =
+    document.getElementById("graphTicks");
+
+
+  motionTicks.innerHTML = "";
+  graphTicks.innerHTML = "";
+
+
+  // vertical physical scale
+
+  for (
+    let height = 0;
+    height <= 6;
+    height++
+  ) {
+
+    const y =
+      motionY(height);
+
+
+    motionTicks.insertAdjacentHTML(
+      "beforeend",
+      `
+      <line
+        x1="98"
+        y1="${y}"
+        x2="122"
+        y2="${y}"
+        stroke="#667389"
+        stroke-width="2"
+      />
+
+      <text
+        x="88"
+        y="${y + 5}"
+        text-anchor="end"
+        fill="#aeb8c9"
+        font-size="13"
+      >
+        ${height} m
+      </text>
+      `
+    );
+
+  }
+
+
+  // time ticks
+
+  [
+    0,
+    0.5,
+    1,
+    1.5,
+    2
+  ]
+  .forEach(time => {
+
+    const x =
+      graphX(time);
+
+
+    graphTicks.insertAdjacentHTML(
+      "beforeend",
+      `
+      <line
+        x1="${x}"
+        y1="478"
+        x2="${x}"
+        y2="492"
+        stroke="#667389"
+        stroke-width="2"
+      />
+
+      <text
+        x="${x}"
+        y="515"
+        text-anchor="middle"
+        fill="#aeb8c9"
+        font-size="13"
+      >
+        ${time}
+      </text>
+      `
+    );
+
+  });
+
+
+  // graph height ticks
+
+  for (
+    let height = 0;
+    height <= 6;
+    height++
+  ) {
+
+    const y =
+      graphY(height);
+
+
+    graphTicks.insertAdjacentHTML(
+      "beforeend",
+      `
+      <line
+        x1="283"
+        y1="${y}"
+        x2="297"
+        y2="${y}"
+        stroke="#667389"
+        stroke-width="2"
+      />
+
+      <text
+        x="273"
+        y="${y + 5}"
+        text-anchor="end"
+        fill="#aeb8c9"
+        font-size="13"
+      >
+        ${height}
+      </text>
+      `
+    );
+
+  }
+
+
+  // parabola
+
+  let path = "";
+
+
+  for (
+    let i = 0;
+    i <= 200;
+    i++
+  ) {
+
+    const time =
+      TMAX * i / 200;
+
+    const height =
+      heightAt(time);
+
+    const x =
+      graphX(time);
+
+    const y =
+      graphY(height);
+
+
+    if (i === 0) {
+
+      path =
+        `M ${x} ${y}`;
+
+    }
+
+    else {
+
+      path +=
+        ` L ${x} ${y}`;
+
+    }
+
+  }
+
+
+  parabola.setAttribute(
+    "d",
+    path
+  );
+
+
+  // vertex
+
+  const vertexX =
+    graphX(1);
+
+  const vertexY =
+    graphY(5);
+
+
+  vertexDot.setAttribute(
+    "cx",
+    vertexX
+  );
+
+  vertexDot.setAttribute(
+    "cy",
+    vertexY
+  );
+
+
+  vertexLabel.setAttribute(
+    "x",
+    vertexX + 13
+  );
+
+  vertexLabel.setAttribute(
+    "y",
+    vertexY - 12
+  );
+
+}
+
+
+
+// ==========================
+// ROOTS
+// ==========================
+
+function calculateRoots() {
+
+  /*
+      10t - 5t² = h
+
+      Rearrange:
+
+      5t² - 10t + h = 0
+
+      a = 5
+      b = -10
+      c = h
+
+      D = b² - 4ac
+
+      D = 100 - 20h
+  */
+
+
+  const discriminant =
+    100
+    - 20 * state.targetHeight;
+
+
+  if (
+    discriminant > 0.000000001
+  ) {
+
+    const rootDiscriminant =
+      Math.sqrt(discriminant);
+
+
+    const firstRoot =
+      (10 - rootDiscriminant)
+      / 10;
+
+
+    const secondRoot =
+      (10 + rootDiscriminant)
+      / 10;
+
+
+    state.roots = [
+      firstRoot,
+      secondRoot
+    ];
+
+  }
+
+
+  else if (
+    Math.abs(discriminant)
+    <= 0.000000001
+  ) {
+
+    state.roots = [1];
+
+  }
+
+
+  else {
+
+    state.roots = [];
+
+  }
+
+
+  return discriminant;
+
+}
+
+
+
+// ==========================
+// TARGET HEIGHT VISUAL
+// ==========================
+
+function updateTargetLines() {
+
+  const graphTargetY =
+    graphY(
+      state.targetHeight
+    );
+
+
+  targetLine.setAttribute(
+    "y1",
+    graphTargetY
+  );
+
+  targetLine.setAttribute(
+    "y2",
+    graphTargetY
+  );
+
+
+  targetHandle.setAttribute(
+    "y",
+    graphTargetY - 13
+  );
+
+
+  targetGraphLabel.setAttribute(
+    "y",
+    graphTargetY - 10
+  );
+
+
+  targetGraphLabel.textContent =
+    `target = ${nice(state.targetHeight)} m`;
+
+
+  const physicalY =
+    motionY(
+      state.targetHeight
+    );
+
+
+  physicalTarget.setAttribute(
+    "y1",
+    physicalY
+  );
+
+  physicalTarget.setAttribute(
+    "y2",
+    physicalY
+  );
+
+
+  physicalTargetLabel.setAttribute(
+    "y",
+    physicalY + 5
+  );
+
+
+  physicalTargetLabel.textContent =
+    `target ${nice(state.targetHeight)} m`;
+
+}
+
+
+
+// ==========================
+// ROOT MARKERS
+// ==========================
+
+function hideRoots() {
+
+  root1Dot.style.display =
+    "none";
+
+  root2Dot.style.display =
+    "none";
+
+  root1Label.style.display =
+    "none";
+
+  root2Label.style.display =
+    "none";
+
+}
+
+
+function showRoot(
+  dot,
+  label,
+  time,
+  lowerLabel = false
+) {
+
+  const x =
+    graphX(time);
+
+  const y =
+    graphY(
+      state.targetHeight
+    );
+
+
+  dot.style.display =
+    "block";
+
+  dot.setAttribute(
+    "cx",
+    x
+  );
+
+  dot.setAttribute(
+    "cy",
+    y
+  );
+
+
+  label.style.display =
+    "block";
+
+  label.setAttribute(
+    "x",
+    x + 10
+  );
+
+
+  label.setAttribute(
+    "y",
+    lowerLabel
+      ? y + 24
+      : y - 12
+  );
+
+
+  label.textContent =
+    `t = ${nice(time)} s`;
+
+}
+
+
+
+// ==========================
+// ROOT INFORMATION
+// ==========================
+
+function updateRootInformation() {
+
+  hideRoots();
+
+
+  const discriminant =
+    calculateRoots();
+
+
+  discValue.textContent =
+    nice(discriminant);
+
+
+  targetReadout.textContent =
+    `${nice(state.targetHeight)} m`;
+
+
+  equationLine.textContent =
+    `5t² − 10t + ${nice(state.targetHeight)} = 0`;
+
+
+
+  if (
+    discriminant > 0.000000001
+  ) {
+
+    rootStatus.className =
+      "status two";
+
+
+    rootStatus.innerHTML =
+      `
+      <strong>D &gt; 0:</strong>
+
+      two real roots.
+
+      The ball reaches this height once while rising
+      and once while falling.
+      `;
+
+
+    root1Value.textContent =
+      `${state.roots[0].toFixed(2)} s`;
+
+
+    root2Value.textContent =
+      `${state.roots[1].toFixed(2)} s`;
+
+
+    showRoot(
+      root1Dot,
+      root1Label,
+      state.roots[0],
+      false
+    );
+
+
+    showRoot(
+      root2Dot,
+      root2Label,
+      state.roots[1],
+      true
+    );
+
+
+    jumpFirst.disabled =
+      false;
+
+    jumpSecond.disabled =
+      false;
+
+  }
+
+
+  else if (
+    Math.abs(discriminant)
+    <= 0.000000001
+  ) {
+
+    rootStatus.className =
+      "status one";
+
+
+    rootStatus.innerHTML =
+      `
+      <strong>D = 0:</strong>
+
+      one repeated root.
+
+      The target height is exactly the maximum height.
+      `;
+
+
+    root1Value.textContent =
+      "1.00 s";
+
+
+    root2Value.textContent =
+      "same event";
+
+
+    showRoot(
+      root1Dot,
+      root1Label,
+      1,
+      false
+    );
+
+
+    jumpFirst.disabled =
+      false;
+
+    jumpSecond.disabled =
+      true;
+
+  }
+
+
+  else {
+
+    rootStatus.className =
+      "status none";
+
+
+    rootStatus.innerHTML =
+      `
+      <strong>D &lt; 0:</strong>
+
+      no real roots.
+
+      The target lies above the maximum height,
+      so the ball never reaches it.
+      `;
+
+
+    root1Value.textContent =
+      "—";
+
+    root2Value.textContent =
+      "—";
+
+
+    jumpFirst.disabled =
+      true;
+
+    jumpSecond.disabled =
+      true;
+
+  }
+
+}
+
+
+
+// ==========================
+// MOVING BALL
+// ==========================
+
+function updateBall() {
+
+  state.time =
+    clamp(
+      state.time,
+      0,
+      2
+    );
+
+
+  const height =
+    Math.max(
+      0,
+      heightAt(state.time)
+    );
+
+
+  const physicalY =
+    motionY(height);
+
+
+  ball.setAttribute(
+    "cx",
+    MOTION_X
+  );
+
+  ball.setAttribute(
+    "cy",
+    physicalY
+  );
+
+
+  const gx =
+    graphX(
+      state.time
+    );
+
+
+  const gy =
+    graphY(height);
+
+
+  graphBall.setAttribute(
+    "cx",
+    gx
+  );
+
+  graphBall.setAttribute(
+    "cy",
+    gy
+  );
+
+
+  timeGuide.setAttribute(
+    "x1",
+    gx
+  );
+
+  timeGuide.setAttribute(
+    "x2",
+    gx
+  );
+
+
+  timeGuide.setAttribute(
+    "y1",
+    GY0
+  );
+
+  timeGuide.setAttribute(
+    "y2",
+    gy
+  );
+
+
+  timeValue.textContent =
+    `${state.time.toFixed(2)} s`;
+
+
+  ballHeightValue.textContent =
+    `${height.toFixed(2)} m`;
+
+
+  const velocity =
+    velocityAt(
+      state.time
+    );
+
+
+  if (
+    Math.abs(velocity) < 0.05
+  ) {
+
+    motionDirection.textContent =
+      "turning point";
+
+    motionDirection.setAttribute(
+      "fill",
+      "#c7a7ff"
+    );
+
+  }
+
+
+  else if (
+    velocity > 0
+  ) {
+
+    motionDirection.textContent =
+      "rising";
+
+    motionDirection.setAttribute(
+      "fill",
+      "#8ee3b4"
+    );
+
+  }
+
+
+  else {
+
+    motionDirection.textContent =
+      "falling";
+
+    motionDirection.setAttribute(
+      "fill",
+      "#ffd479"
+    );
+
+  }
+
+}
+
+
+
+// ==========================
+// MASTER UPDATE
+// ==========================
+
+function updateAll() {
+
+  state.targetHeight =
+    Number(
+      slider.value
+    );
+
+
+  updateTargetLines();
+
+  updateRootInformation();
+
+  updateBall();
+
+
+  presetButtons.forEach(
+    button => {
+
+      const presetHeight =
+        Number(
+          button.dataset.height
+        );
+
+
+      button.classList.toggle(
+        "active",
+        Math.abs(
+          presetHeight
+          - state.targetHeight
+        ) < 0.001
+      );
+
+    }
+  );
+
+}
+
+
+
+// ==========================
+// ANIMATION
+// ==========================
+
+function stopAnimation() {
+
+  state.running =
+    false;
+
+  state.previousTimestamp =
+    null;
+
+}
+
+
+function animationFrame(timestamp) {
+
+  if (
+    !state.running
+  ) {
+
+    return;
+
+  }
+
+
+  if (
+    state.previousTimestamp === null
+  ) {
+
+    state.previousTimestamp =
+      timestamp;
+
+  }
+
+
+  const elapsedSeconds =
+    (
+      timestamp
+      - state.previousTimestamp
+    )
+    / 1000;
+
+
+  state.previousTimestamp =
+    timestamp;
+
+
+  state.time +=
+    elapsedSeconds * 0.65;
+
+
+  if (
+    state.time >= 2
+  ) {
+
+    state.time = 2;
+
+    stopAnimation();
+
+  }
+
+
+  updateBall();
+
+
+  if (
+    state.running
+  ) {
+
+    requestAnimationFrame(
+      animationFrame
+    );
+
+  }
+
+}
+
+
+
+// ==========================
+// BUTTON EVENTS
+// ==========================
+
+playBtn.addEventListener(
+  "click",
+  () => {
+
+    if (
+      state.time >= 2
+    ) {
+
+      state.time = 0;
+
+    }
+
+
+    if (
+      !state.running
+    ) {
+
+      state.running =
+        true;
+
+
+      state.previousTimestamp =
+        null;
+
+
+      requestAnimationFrame(
+        animationFrame
+      );
+
+    }
+
+  }
+);
+
+
+pauseBtn.addEventListener(
+  "click",
+  () => {
+
+    stopAnimation();
+
+  }
+);
+
+
+resetBtn.addEventListener(
+  "click",
+  () => {
+
+    stopAnimation();
+
+    state.time = 0;
+
+    updateBall();
+
+  }
+);
+
+
+
+jumpFirst.addEventListener(
+  "click",
+  () => {
+
+    stopAnimation();
+
+
+    if (
+      state.roots.length >= 1
+    ) {
+
+      state.time =
+        state.roots[0];
+
+      updateBall();
+
+    }
+
+  }
+);
+
+
+
+jumpVertex.addEventListener(
+  "click",
+  () => {
+
+    stopAnimation();
+
+    state.time = 1;
+
+    updateBall();
+
+  }
+);
+
+
+
+jumpSecond.addEventListener(
+  "click",
+  () => {
+
+    stopAnimation();
+
+
+    if (
+      state.roots.length === 2
+    ) {
+
+      state.time =
+        state.roots[1];
+
+      updateBall();
+
+    }
+
+  }
+);
+
+
+
+// ==========================
+// TARGET SLIDER
+// ==========================
+
+slider.addEventListener(
+  "input",
+  () => {
+
+    stopAnimation();
+
+    updateAll();
+
+  }
+);
+
+
+
+// ==========================
+// PRESETS
+// ==========================
+
+presetButtons.forEach(
+  button => {
+
+    button.addEventListener(
+      "click",
+      () => {
+
+        stopAnimation();
+
+
+        slider.value =
+          button.dataset.height;
+
+
+        updateAll();
+
+      }
+    );
+
+  }
+);
+
+
+
+// ==========================
+// DRAGGABLE TARGET LINE
+// ==========================
+
+function pointerHeight(event) {
+
+  const rect =
+    svg.getBoundingClientRect();
+
+
+  const svgY =
+    (
+      event.clientY
+      - rect.top
+    )
+    *
+    (
+      560
+      / rect.height
+    );
+
+
+  const height =
+    (
+      GY0
+      - svgY
+    )
+    /
+    (
+      GY0
+      - GY1
+    )
+    *
+    YMAX;
+
+
+  return clamp(
+    height,
+    0,
+    6.5
+  );
+
+}
+
+
+
+targetGroup.addEventListener(
+  "pointerdown",
+  event => {
+
+    state.dragging =
+      true;
+
+
+    stopAnimation();
+
+
+    targetGroup.setPointerCapture(
+      event.pointerId
+    );
+
+
+    slider.value =
+      pointerHeight(event);
+
+
+    updateAll();
+
+  }
+);
+
+
+
+targetGroup.addEventListener(
+  "pointermove",
+  event => {
+
+    if (
+      !state.dragging
+    ) {
+
+      return;
+
+    }
+
+
+    slider.value =
+      pointerHeight(event);
+
+
+    updateAll();
+
+  }
+);
+
+
+
+targetGroup.addEventListener(
+  "pointerup",
+  () => {
+
+    state.dragging =
+      false;
+
+  }
+);
+
+
+
+targetGroup.addEventListener(
+  "pointercancel",
+  () => {
+
+    state.dragging =
+      false;
+
+  }
+);
+
+
+
+// ==========================
+// INITIALIZE
+// ==========================
+
+buildStaticGraph();
+
+updateAll();
+
+})();
+</script>
+
+</body>
+</html>
