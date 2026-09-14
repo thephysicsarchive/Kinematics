@@ -1,0 +1,1312 @@
+<div id="secantSimulator">
+
+  <div class="header">
+    <div>
+      <h1>Instantaneous Velocity Visualizer</h1>
+      <p>
+        Bring point B closer to point A and watch average velocity
+        become instantaneous velocity.
+      </p>
+    </div>
+
+    <div class="equation-card">
+      <span>Position function</span>
+      <strong>x(t) = t²</strong>
+    </div>
+  </div>
+
+
+  <div class="concept-row">
+
+    <div class="value-card">
+      <span>Fixed point A</span>
+      <strong>t = 2.00 s</strong>
+      <small>x = 4.00 m</small>
+    </div>
+
+    <div class="value-card">
+      <span>Time interval</span>
+      <strong id="deltaTDisplay">4.00 s</strong>
+      <small>Δt</small>
+    </div>
+
+    <div class="value-card secant-card">
+      <span>Average velocity</span>
+      <strong id="secantSlopeDisplay">8.00 m/s</strong>
+      <small>secant gradient</small>
+    </div>
+
+    <div class="value-card tangent-card">
+      <span>Instantaneous velocity</span>
+      <strong>4.00 m/s</strong>
+      <small>tangent gradient</small>
+    </div>
+
+  </div>
+
+
+  <div class="controls">
+
+    <div class="slider-heading">
+      <label for="deltaSlider">
+        Move B toward A
+      </label>
+
+      <strong id="sliderValue">
+        Δt = 4.00 s
+      </strong>
+    </div>
+
+    <input
+      id="deltaSlider"
+      type="range"
+      min="0"
+      max="6"
+      step="1"
+      value="0"
+    />
+
+    <div class="slider-scale">
+      <span>Far apart</span>
+      <span>B → A</span>
+    </div>
+
+
+    <div class="preset-row">
+
+      <button data-h="4">Δt = 4</button>
+      <button data-h="2">2</button>
+      <button data-h="1">1</button>
+      <button data-h="0.5">0.5</button>
+      <button data-h="0.1">0.1</button>
+      <button data-h="0.02">0.02</button>
+
+    </div>
+
+  </div>
+
+
+  <div class="graph-card">
+
+    <svg
+      id="graph"
+      viewBox="0 0 900 600"
+      aria-label="Position-time curve showing a secant approaching a tangent"
+    >
+
+      <g id="grid"></g>
+
+      <!-- AXES -->
+      <line
+        x1="80"
+        y1="520"
+        x2="840"
+        y2="520"
+        class="axis"
+      />
+
+      <line
+        x1="80"
+        y1="520"
+        x2="80"
+        y2="50"
+        class="axis"
+      />
+
+
+      <polygon
+        points="840,520 821,510 821,530"
+        class="axis-arrow"
+      />
+
+      <polygon
+        points="80,50 70,70 90,70"
+        class="axis-arrow"
+      />
+
+
+      <text
+        x="805"
+        y="558"
+        class="axis-label"
+      >
+        t (s)
+      </text>
+
+      <text
+        x="25"
+        y="72"
+        class="axis-label"
+      >
+        x (m)
+      </text>
+
+
+      <!-- CURVE -->
+      <path
+        id="curve"
+        class="curve"
+      />
+
+
+      <!-- TANGENT -->
+      <line
+        id="tangentLine"
+        class="tangent-line"
+      />
+
+
+      <!-- SECANT -->
+      <line
+        id="secantLine"
+        class="secant-line"
+      />
+
+
+      <!-- DELTA T -->
+      <line
+        id="deltaTBracket"
+        class="delta-bracket"
+      />
+
+      <line
+        id="deltaTLeft"
+        class="delta-bracket"
+      />
+
+      <line
+        id="deltaTRight"
+        class="delta-bracket"
+      />
+
+      <text
+        id="deltaTLabel"
+        class="delta-label"
+      >
+        Δt
+      </text>
+
+
+      <!-- A -->
+      <circle
+        id="pointA"
+        r="9"
+        class="point-a"
+      />
+
+      <text
+        id="labelA"
+        class="point-label"
+      >
+        A
+      </text>
+
+
+      <!-- B -->
+      <circle
+        id="pointB"
+        r="9"
+        class="point-b"
+      />
+
+      <text
+        id="labelB"
+        class="point-label"
+      >
+        B
+      </text>
+
+
+      <!-- GUIDES -->
+      <line
+        id="guideAx"
+        class="guide"
+      />
+
+      <line
+        id="guideAy"
+        class="guide"
+      />
+
+      <line
+        id="guideBx"
+        class="guide"
+      />
+
+      <line
+        id="guideBy"
+        class="guide"
+      />
+
+
+      <text
+        id="secantLabel"
+        class="secant-label"
+      >
+        secant
+      </text>
+
+      <text
+        id="tangentLabel"
+        class="tangent-label"
+      >
+        tangent
+      </text>
+
+    </svg>
+
+  </div>
+
+
+  <div class="calculation-grid">
+
+    <div class="calculation">
+
+      <span>Average velocity</span>
+
+      <div>
+        v̄ =
+        <span class="fraction">
+          <span>Δx</span>
+          <span>Δt</span>
+        </span>
+      </div>
+
+      <strong id="averageCalculation">
+        = 8.00 m/s
+      </strong>
+
+    </div>
+
+
+    <div class="calculation">
+
+      <span>Instantaneous velocity</span>
+
+      <div>
+        v =
+        <span class="fraction">
+          <span>dx</span>
+          <span>dt</span>
+        </span>
+      </div>
+
+      <strong>
+        = 4.00 m/s
+      </strong>
+
+    </div>
+
+  </div>
+
+
+  <div class="approach-panel">
+
+    <div>
+      <span>Difference between gradients</span>
+      <strong id="slopeDifference">4.00 m/s</strong>
+    </div>
+
+    <div class="approach-bar">
+      <div id="approachFill"></div>
+    </div>
+
+    <p id="approachMessage">
+      B is still far from A, so the secant describes average motion
+      over a sizeable time interval.
+    </p>
+
+  </div>
+
+
+  <div class="teaching-message">
+
+    <strong>
+      Instantaneous velocity is not introduced out of nowhere.
+    </strong>
+
+    <p>
+      It emerges as the average velocity over a smaller and smaller
+      time interval. As Δt approaches zero, the secant approaches
+      the tangent.
+    </p>
+
+  </div>
+
+</div>
+
+
+<style>
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 28px;
+  background: #080b11;
+  color: #f4f7fb;
+  font-family: Inter, Arial, sans-serif;
+}
+
+#secantSimulator {
+  max-width: 1100px;
+  margin: auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 22px;
+  margin-bottom: 20px;
+}
+
+h1 {
+  margin: 0 0 7px;
+  font-size: 30px;
+}
+
+.header p {
+  margin: 0;
+  color: #a8b2c1;
+  line-height: 1.55;
+}
+
+.equation-card {
+  min-width: 190px;
+  padding: 15px 18px;
+  border: 1px solid #354052;
+  border-radius: 13px;
+  background: #111722;
+}
+
+.equation-card span,
+.value-card span,
+.calculation > span,
+.approach-panel span {
+  display: block;
+  color: #909bab;
+  font-size: 12px;
+}
+
+.equation-card strong {
+  display: block;
+  margin-top: 6px;
+  font-family: Georgia, serif;
+  font-size: 24px;
+}
+
+.concept-row {
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 11px;
+}
+
+.value-card {
+  padding: 15px;
+  background: #111722;
+  border: 1px solid #303a49;
+  border-radius: 13px;
+}
+
+.value-card strong {
+  display: block;
+  margin-top: 6px;
+  font-size: 23px;
+}
+
+.value-card small {
+  display: block;
+  margin-top: 5px;
+  color: #778494;
+}
+
+.secant-card strong {
+  color: #70a9ff;
+}
+
+.tangent-card strong {
+  color: #efb568;
+}
+
+.controls {
+  margin-top: 17px;
+  padding: 18px;
+  background: #111722;
+  border: 1px solid #303a49;
+  border-radius: 14px;
+}
+
+.slider-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  font-weight: 700;
+}
+
+input[type="range"] {
+  width: 100%;
+  margin-top: 17px;
+  accent-color: #6e9ee8;
+}
+
+.slider-scale {
+  display: flex;
+  justify-content: space-between;
+  color: #788596;
+  font-size: 11px;
+}
+
+.preset-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 15px;
+}
+
+button {
+  min-height: 42px;
+  padding: 8px 14px;
+  color: white;
+  border: 1px solid #3a4658;
+  border-radius: 9px;
+  background: #161e2a;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #222e40;
+}
+
+.graph-card {
+  margin-top: 18px;
+  padding: 10px;
+  border: 1px solid #303a49;
+  border-radius: 17px;
+  background: #0e141d;
+}
+
+svg {
+  width: 100%;
+  display: block;
+}
+
+.axis {
+  stroke: #aeb8c7;
+  stroke-width: 2;
+}
+
+.axis-arrow {
+  fill: #aeb8c7;
+}
+
+.axis-label {
+  fill: #c0c8d4;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.grid-line {
+  stroke: #27313f;
+  stroke-width: 1;
+}
+
+.grid-label {
+  fill: #748193;
+  font-size: 11px;
+}
+
+.curve {
+  fill: none;
+  stroke: #dbe4ef;
+  stroke-width: 4;
+}
+
+.secant-line {
+  stroke: #70a9ff;
+  stroke-width: 4;
+}
+
+.tangent-line {
+  stroke: #efb568;
+  stroke-width: 4;
+  stroke-dasharray: 10 7;
+}
+
+.point-a {
+  fill: #efb568;
+  stroke: #fff0d6;
+  stroke-width: 3;
+}
+
+.point-b {
+  fill: #70a9ff;
+  stroke: #dcecff;
+  stroke-width: 3;
+}
+
+.point-label {
+  fill: white;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.guide {
+  stroke: #667487;
+  stroke-width: 1.3;
+  stroke-dasharray: 6 6;
+}
+
+.secant-label {
+  fill: #70a9ff;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.tangent-label {
+  fill: #efb568;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.delta-bracket {
+  stroke: #b58cff;
+  stroke-width: 2;
+}
+
+.delta-label {
+  fill: #c9aaff;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.calculation-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 13px;
+  margin-top: 17px;
+}
+
+.calculation {
+  padding: 18px;
+  background: #111722;
+  border: 1px solid #303a49;
+  border-radius: 13px;
+}
+
+.calculation div {
+  margin-top: 8px;
+  font: 21px Georgia, serif;
+}
+
+.calculation strong {
+  display: block;
+  margin-top: 10px;
+  font-size: 19px;
+}
+
+.fraction {
+  display: inline-flex;
+  flex-direction: column;
+  text-align: center;
+  vertical-align: middle;
+  margin: 0 5px;
+}
+
+.fraction span:first-child {
+  border-bottom: 1px solid white;
+}
+
+.fraction span {
+  padding: 1px 5px;
+}
+
+.approach-panel {
+  margin-top: 17px;
+  padding: 18px;
+  border: 1px solid #303a49;
+  border-radius: 13px;
+  background: #111722;
+}
+
+.approach-panel strong {
+  display: block;
+  margin-top: 4px;
+  font-size: 21px;
+}
+
+.approach-bar {
+  height: 9px;
+  margin-top: 14px;
+  overflow: hidden;
+  border-radius: 20px;
+  background: #222b38;
+}
+
+#approachFill {
+  height: 100%;
+  width: 0;
+  background: #8caee8;
+  transition: width .25s ease;
+}
+
+.approach-panel p {
+  margin: 12px 0 0;
+  color: #9ea9b8;
+  line-height: 1.55;
+}
+
+.teaching-message {
+  margin-top: 17px;
+  padding: 18px;
+  border-left: 4px solid #b58cff;
+  border-radius: 9px;
+  background: #151323;
+}
+
+.teaching-message p {
+  margin: 7px 0 0;
+  color: #a8b2c1;
+  line-height: 1.6;
+}
+
+@media(max-width:800px) {
+
+  body {
+    padding: 13px;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .concept-row {
+    grid-template-columns: repeat(2,1fr);
+  }
+
+  .calculation-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media(max-width:480px) {
+
+  .concept-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+</style>
+
+
+<script>
+
+(() => {
+
+  const hValues =
+    [4, 2, 1, 0.5, 0.1, 0.02, 0.005];
+
+  let h = 4;
+
+  const a = 2;
+
+  const graphLeft = 80;
+  const graphRight = 840;
+  const graphBottom = 520;
+  const graphTop = 50;
+
+  const tMin = 0;
+  const tMax = 7;
+
+  const xMin = 0;
+  const xMax = 49;
+
+
+  const graph =
+    document.getElementById("graph");
+
+  const grid =
+    document.getElementById("grid");
+
+  const curve =
+    document.getElementById("curve");
+
+  const secantLine =
+    document.getElementById("secantLine");
+
+  const tangentLine =
+    document.getElementById("tangentLine");
+
+  const pointA =
+    document.getElementById("pointA");
+
+  const pointB =
+    document.getElementById("pointB");
+
+  const labelA =
+    document.getElementById("labelA");
+
+  const labelB =
+    document.getElementById("labelB");
+
+  const deltaSlider =
+    document.getElementById("deltaSlider");
+
+
+  function f(t) {
+    return t * t;
+  }
+
+
+  function tToX(t) {
+
+    return graphLeft +
+      (t - tMin) /
+      (tMax - tMin) *
+      (graphRight - graphLeft);
+
+  }
+
+
+  function positionToY(x) {
+
+    return graphBottom -
+      (x - xMin) /
+      (xMax - xMin) *
+      (graphBottom - graphTop);
+
+  }
+
+
+  function svg(tag) {
+
+    return document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      tag
+    );
+
+  }
+
+
+  function drawGrid() {
+
+    for (let t = 0; t <= 7; t++) {
+
+      const px = tToX(t);
+
+      const line = svg("line");
+
+      line.setAttribute("x1", px);
+      line.setAttribute("x2", px);
+      line.setAttribute("y1", graphTop);
+      line.setAttribute("y2", graphBottom);
+      line.setAttribute("class", "grid-line");
+
+      grid.appendChild(line);
+
+
+      const label = svg("text");
+
+      label.setAttribute("x", px);
+      label.setAttribute("y", graphBottom + 24);
+      label.setAttribute("text-anchor", "middle");
+      label.setAttribute("class", "grid-label");
+
+      label.textContent = t;
+
+      grid.appendChild(label);
+    }
+
+
+    for (let x = 0; x <= 40; x += 5) {
+
+      const py = positionToY(x);
+
+      const line = svg("line");
+
+      line.setAttribute("x1", graphLeft);
+      line.setAttribute("x2", graphRight);
+      line.setAttribute("y1", py);
+      line.setAttribute("y2", py);
+      line.setAttribute("class", "grid-line");
+
+      grid.appendChild(line);
+
+
+      const label = svg("text");
+
+      label.setAttribute("x", graphLeft - 12);
+      label.setAttribute("y", py + 4);
+      label.setAttribute("text-anchor", "end");
+      label.setAttribute("class", "grid-label");
+
+      label.textContent = x;
+
+      grid.appendChild(label);
+    }
+  }
+
+
+  function drawCurve() {
+
+    let d = "";
+
+    const steps = 200;
+
+    for (let i = 0; i <= steps; i++) {
+
+      const t =
+        tMin +
+        (tMax - tMin) *
+        i / steps;
+
+      const px = tToX(t);
+      const py = positionToY(f(t));
+
+      d +=
+        (i === 0 ? "M " : " L ") +
+        px + " " + py;
+    }
+
+    curve.setAttribute("d", d);
+  }
+
+
+  function lineForEquation(
+    pointT,
+    pointX,
+    slope
+  ) {
+
+    const t1 = 0.25;
+    const t2 = 6.75;
+
+    const x1 =
+      pointX +
+      slope *
+      (t1 - pointT);
+
+    const x2 =
+      pointX +
+      slope *
+      (t2 - pointT);
+
+    return {
+      x1: tToX(t1),
+      y1: positionToY(x1),
+      x2: tToX(t2),
+      y2: positionToY(x2)
+    };
+  }
+
+
+  function setLine(
+    element,
+    data
+  ) {
+
+    element.setAttribute(
+      "x1",
+      data.x1
+    );
+
+    element.setAttribute(
+      "y1",
+      data.y1
+    );
+
+    element.setAttribute(
+      "x2",
+      data.x2
+    );
+
+    element.setAttribute(
+      "y2",
+      data.y2
+    );
+  }
+
+
+  function updateGuide(
+    id,
+    x1,
+    y1,
+    x2,
+    y2
+  ) {
+
+    const e =
+      document.getElementById(id);
+
+    e.setAttribute("x1", x1);
+    e.setAttribute("y1", y1);
+    e.setAttribute("x2", x2);
+    e.setAttribute("y2", y2);
+  }
+
+
+  function update() {
+
+    const tA = a;
+    const xA = f(a);
+
+    const tB = a + h;
+    const xB = f(tB);
+
+    const secantSlope =
+      (xB - xA) / h;
+
+    const tangentSlope =
+      2 * a;
+
+
+    const ax = tToX(tA);
+    const ay = positionToY(xA);
+
+    const bx = tToX(tB);
+    const by = positionToY(xB);
+
+
+    pointA.setAttribute("cx", ax);
+    pointA.setAttribute("cy", ay);
+
+    pointB.setAttribute("cx", bx);
+    pointB.setAttribute("cy", by);
+
+
+    labelA.setAttribute("x", ax - 20);
+    labelA.setAttribute("y", ay - 15);
+
+    labelB.setAttribute("x", bx + 13);
+    labelB.setAttribute("y", by - 10);
+
+
+    setLine(
+      secantLine,
+      lineForEquation(
+        tA,
+        xA,
+        secantSlope
+      )
+    );
+
+
+    setLine(
+      tangentLine,
+      lineForEquation(
+        tA,
+        xA,
+        tangentSlope
+      )
+    );
+
+
+    updateGuide(
+      "guideAx",
+      ax,
+      ay,
+      ax,
+      graphBottom
+    );
+
+    updateGuide(
+      "guideAy",
+      graphLeft,
+      ay,
+      ax,
+      ay
+    );
+
+    updateGuide(
+      "guideBx",
+      bx,
+      by,
+      bx,
+      graphBottom
+    );
+
+    updateGuide(
+      "guideBy",
+      graphLeft,
+      by,
+      bx,
+      by
+    );
+
+
+    const bracketY = graphBottom - 25;
+
+    document
+      .getElementById("deltaTBracket")
+      .setAttribute("x1", ax);
+
+    document
+      .getElementById("deltaTBracket")
+      .setAttribute("x2", bx);
+
+    document
+      .getElementById("deltaTBracket")
+      .setAttribute("y1", bracketY);
+
+    document
+      .getElementById("deltaTBracket")
+      .setAttribute("y2", bracketY);
+
+
+    updateGuide(
+      "deltaTLeft",
+      ax,
+      bracketY - 7,
+      ax,
+      bracketY + 7
+    );
+
+    updateGuide(
+      "deltaTRight",
+      bx,
+      bracketY - 7,
+      bx,
+      bracketY + 7
+    );
+
+
+    const deltaLabel =
+      document.getElementById(
+        "deltaTLabel"
+      );
+
+    deltaLabel.setAttribute(
+      "x",
+      (ax + bx) / 2
+    );
+
+    deltaLabel.setAttribute(
+      "y",
+      bracketY - 10
+    );
+
+
+    const secantLabel =
+      document.getElementById(
+        "secantLabel"
+      );
+
+    secantLabel.setAttribute(
+      "x",
+      (ax + bx) / 2 + 10
+    );
+
+    secantLabel.setAttribute(
+      "y",
+      (ay + by) / 2 - 15
+    );
+
+
+    document
+      .getElementById("tangentLabel")
+      .setAttribute(
+        "x",
+        ax + 115
+      );
+
+    document
+      .getElementById("tangentLabel")
+      .setAttribute(
+        "y",
+        ay - 80
+      );
+
+
+    document
+      .getElementById(
+        "deltaTDisplay"
+      )
+      .textContent =
+        h.toFixed(
+          h < 0.1 ? 3 : 2
+        ) + " s";
+
+
+    document
+      .getElementById(
+        "sliderValue"
+      )
+      .textContent =
+        "Δt = " +
+        h.toFixed(
+          h < 0.1 ? 3 : 2
+        ) +
+        " s";
+
+
+    document
+      .getElementById(
+        "secantSlopeDisplay"
+      )
+      .textContent =
+        secantSlope.toFixed(3) +
+        " m/s";
+
+
+    document
+      .getElementById(
+        "averageCalculation"
+      )
+      .textContent =
+        "= " +
+        secantSlope.toFixed(3) +
+        " m/s";
+
+
+    const difference =
+      Math.abs(
+        secantSlope -
+        tangentSlope
+      );
+
+
+    document
+      .getElementById(
+        "slopeDifference"
+      )
+      .textContent =
+        difference.toFixed(3) +
+        " m/s";
+
+
+    const closeness =
+      Math.max(
+        0,
+        Math.min(
+          100,
+          100 *
+          (
+            1 -
+            difference / 4
+          )
+        )
+      );
+
+
+    document
+      .getElementById(
+        "approachFill"
+      )
+      .style.width =
+        closeness + "%";
+
+
+    let message;
+
+
+    if (h >= 2) {
+
+      message =
+        "B is still far from A, so the secant describes average motion over a sizeable time interval.";
+
+    }
+
+    else if (h >= 0.5) {
+
+      message =
+        "The time interval is shrinking. The secant is rotating toward the tangent and the average velocity is getting closer to the instantaneous velocity.";
+
+    }
+
+    else if (h >= 0.05) {
+
+      message =
+        "B is now very close to A. The secant and tangent are becoming almost indistinguishable.";
+
+    }
+
+    else {
+
+      message =
+        "In the limiting picture, Δt approaches zero and the secant gradient approaches the tangent gradient: dx/dt.";
+
+    }
+
+
+    document
+      .getElementById(
+        "approachMessage"
+      )
+      .textContent =
+        message;
+
+  }
+
+
+  deltaSlider.addEventListener(
+    "input",
+    () => {
+
+      h =
+        hValues[
+          Number(
+            deltaSlider.value
+          )
+        ];
+
+      update();
+    }
+  );
+
+
+  document
+    .querySelectorAll("[data-h]")
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          h =
+            Number(
+              button.dataset.h
+            );
+
+
+          let nearest = 0;
+          let minDiff = Infinity;
+
+
+          hValues.forEach(
+            (value,index) => {
+
+              const diff =
+                Math.abs(
+                  value - h
+                );
+
+              if (diff < minDiff) {
+
+                minDiff = diff;
+                nearest = index;
+              }
+            }
+          );
+
+
+          deltaSlider.value =
+            nearest;
+
+          update();
+        }
+      );
+
+    });
+
+
+  drawGrid();
+  drawCurve();
+  update();
+
+})();
+
+</script>
