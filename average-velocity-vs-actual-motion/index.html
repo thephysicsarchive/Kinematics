@@ -1,0 +1,1457 @@
+<div id="avgVelocityLab">
+
+  <!-- HEADER -->
+  <div class="header">
+
+    <div>
+      <h1>Average Velocity vs Actual Motion Lab</h1>
+      <p>
+        Compare a complicated motion with a constant-velocity motion that
+        produces the same displacement in the same total time.
+      </p>
+    </div>
+
+    <div class="equation-card">
+      <span>Average velocity</span>
+      <strong>v̄ = Δx / Δt</strong>
+    </div>
+
+  </div>
+
+
+  <!-- LIVE VALUES -->
+  <div class="value-grid">
+
+    <div class="value-card">
+      <span>Current time</span>
+      <strong id="timeDisplay">0.00 s</strong>
+      <small>t</small>
+    </div>
+
+    <div class="value-card actual-card">
+      <span>Object A position</span>
+      <strong id="actualPositionDisplay">0.00 m</strong>
+      <small>xA(t)</small>
+    </div>
+
+    <div class="value-card actual-velocity-card">
+      <span>Object A velocity now</span>
+      <strong id="actualVelocityDisplay">+0.00 m/s</strong>
+      <small>changes with time</small>
+    </div>
+
+    <div class="value-card average-card">
+      <span>Object B position</span>
+      <strong id="averagePositionDisplay">0.00 m</strong>
+      <small>xB(t)</small>
+    </div>
+
+    <div class="value-card average-velocity-card">
+      <span>Object B velocity</span>
+      <strong id="constantVelocityDisplay">+1.00 m/s</strong>
+      <small>constant average velocity</small>
+    </div>
+
+    <div class="value-card highlight-card">
+      <span>Whole-interval average velocity</span>
+      <strong id="averageVelocityDisplay">+1.00 m/s</strong>
+      <small>same endpoints, same total time</small>
+    </div>
+
+  </div>
+
+
+  <!-- CONTROLS -->
+  <div class="controls-panel">
+
+    <div class="button-row">
+      <button id="playButton" class="primary" type="button">▶ Play</button>
+      <button id="pauseButton" type="button">❚❚ Pause</button>
+      <button id="resetButton" type="button">↺ Reset</button>
+      <button id="finishButton" type="button">Jump to finish</button>
+    </div>
+
+    <div class="time-control">
+
+      <div class="slider-heading">
+        <label for="timeSlider">Scrub through the interval</label>
+        <strong id="sliderReadout">t = 0.00 s</strong>
+      </div>
+
+      <input
+        id="timeSlider"
+        type="range"
+        min="0"
+        max="12"
+        step="0.01"
+        value="0"
+      />
+
+      <div class="time-scale">
+        <span>0 s</span>
+        <span>3 s</span>
+        <span>6 s</span>
+        <span>9 s</span>
+        <span>12 s</span>
+      </div>
+
+    </div>
+
+
+    <div class="preset-row">
+      <button class="preset" data-time="2.5" type="button">Pause begins</button>
+      <button class="preset" data-time="4.0" type="button">Before reversal</button>
+      <button class="preset" data-time="5.0" type="button">Reversing</button>
+      <button class="preset" data-time="8.0" type="button">Moving forward again</button>
+      <button class="preset" data-time="12.0" type="button">Finish together</button>
+    </div>
+
+  </div>
+
+
+  <!-- TRACK PANEL -->
+  <section class="track-panel">
+
+    <div class="panel-heading">
+      <div>
+        <h2>Motion on the track</h2>
+        <p>
+          Both objects start together and finish together. Only Object B
+          moves with the constant average velocity.
+        </p>
+      </div>
+
+      <div id="statusBadge" class="status-badge">
+        Start of the interval
+      </div>
+    </div>
+
+
+    <svg
+      id="trackSvg"
+      viewBox="0 0 1000 330"
+      role="img"
+      aria-label="Two-object motion comparison on a horizontal track"
+    >
+
+      <!-- OBJECT A LANE -->
+      <text x="70" y="92" class="lane-title actual-lane-title">
+        Object A — actual motion
+      </text>
+
+      <line
+        x1="120"
+        y1="120"
+        x2="900"
+        y2="120"
+        class="track-line"
+      />
+
+      <line
+        id="actualProgress"
+        x1="120"
+        y1="120"
+        x2="120"
+        y2="120"
+        class="progress-line actual-progress"
+      />
+
+      <circle
+        cx="120"
+        cy="120"
+        r="10"
+        class="endpoint start-endpoint"
+      />
+
+      <circle
+        cx="900"
+        cy="120"
+        r="10"
+        class="endpoint finish-endpoint"
+      />
+
+      <text x="120" y="154" text-anchor="middle" class="endpoint-label">
+        start
+      </text>
+
+      <text x="900" y="154" text-anchor="middle" class="endpoint-label">
+        finish
+      </text>
+
+      <circle
+        id="actualObject"
+        cx="120"
+        cy="120"
+        r="18"
+        class="object actual-object"
+      />
+
+      <circle
+        id="actualInner"
+        cx="120"
+        cy="120"
+        r="6"
+        class="object-inner"
+      />
+
+      <text
+        id="actualObjectLabel"
+        x="120"
+        y="83"
+        text-anchor="middle"
+        class="object-label"
+      >
+        xA = 0.00 m
+      </text>
+
+
+      <!-- OBJECT B LANE -->
+      <text x="70" y="222" class="lane-title average-lane-title">
+        Object B — constant average velocity
+      </text>
+
+      <line
+        x1="120"
+        y1="250"
+        x2="900"
+        y2="250"
+        class="track-line"
+      />
+
+      <line
+        id="averageProgress"
+        x1="120"
+        y1="250"
+        x2="120"
+        y2="250"
+        class="progress-line average-progress"
+      />
+
+      <circle
+        cx="120"
+        cy="250"
+        r="10"
+        class="endpoint start-endpoint"
+      />
+
+      <circle
+        cx="900"
+        cy="250"
+        r="10"
+        class="endpoint finish-endpoint"
+      />
+
+      <text
+        id="averageObjectLabel"
+        x="120"
+        y="213"
+        text-anchor="middle"
+        class="object-label average-object-label"
+      >
+        xB = 0.00 m
+      </text>
+
+      <circle
+        id="averageObject"
+        cx="120"
+        cy="250"
+        r="18"
+        class="object average-object"
+      />
+
+      <circle
+        id="averageInner"
+        cx="120"
+        cy="250"
+        r="6"
+        class="object-inner average-inner"
+      />
+
+    </svg>
+
+  </section>
+
+
+  <!-- GRAPH PANEL -->
+  <section class="graph-panel">
+
+    <div class="panel-heading">
+      <div>
+        <h2>Position–time graph</h2>
+        <p>
+          Object B is a straight line because its velocity is constant.
+          Object A has more complicated motion but the same endpoints.
+        </p>
+      </div>
+
+      <div class="graph-badge">
+        Same displacement, same total time
+      </div>
+    </div>
+
+    <svg
+      id="graphSvg"
+      viewBox="0 0 1000 520"
+      role="img"
+      aria-label="Position-time comparison between actual motion and constant average velocity"
+    >
+
+      <g id="graphGrid"></g>
+
+      <!-- AXES -->
+      <line x1="100" y1="430" x2="920" y2="430" class="axis" />
+      <line x1="100" y1="430" x2="100" y2="70" class="axis" />
+
+      <polygon points="920,430 903,421 903,439" class="axis-arrow" />
+      <polygon points="100,70 91,88 109,88" class="axis-arrow" />
+
+      <text x="890" y="465" class="axis-label">t (s)</text>
+      <text x="28" y="88" class="axis-label">x (m)</text>
+
+      <!-- CURVES -->
+      <path id="actualPath" class="actual-path" />
+      <path id="averagePath" class="average-path" />
+
+      <!-- CURSOR -->
+      <line
+        id="timeCursor"
+        x1="100"
+        y1="430"
+        x2="100"
+        y2="70"
+        class="time-cursor"
+      />
+
+      <!-- CURRENT POINTS -->
+      <circle
+        id="actualGraphPoint"
+        cx="100"
+        cy="430"
+        r="7"
+        class="actual-graph-point"
+      />
+
+      <circle
+        id="averageGraphPoint"
+        cx="100"
+        cy="430"
+        r="7"
+        class="average-graph-point"
+      />
+
+      <!-- ENDPOINTS -->
+      <circle cx="100" cy="430" r="6" class="endpoint-graph" />
+      <circle cx="920" cy="70" r="6" class="endpoint-graph" />
+
+      <!-- LEGEND -->
+      <g transform="translate(620,90)">
+        <rect x="0" y="0" width="250" height="68" rx="10" class="legend-box" />
+
+        <line x1="18" y1="23" x2="52" y2="23" class="actual-path legend-line" />
+        <text x="64" y="28" class="legend-text">Object A: actual motion</text>
+
+        <line x1="18" y1="47" x2="52" y2="47" class="average-path legend-line" />
+        <text x="64" y="52" class="legend-text">Object B: constant average velocity</text>
+      </g>
+
+    </svg>
+
+  </section>
+
+
+  <!-- EQUATION PANEL -->
+  <div class="equation-panel">
+
+    <div class="equation-box summary-box">
+      <span>Whole interval</span>
+      <strong id="intervalSummary">
+        xᵢ = 0.00 m, x_f = 12.00 m, Δt = 12.00 s
+      </strong>
+    </div>
+
+    <div class="equation-box average-velocity-box">
+      <span>Average velocity calculation</span>
+      <strong id="averageVelocityEquation">
+        v̄ = (12.00 − 0.00) / (12.00 − 0.00) = +1.00 m/s
+      </strong>
+    </div>
+
+    <div class="equation-box actual-now-box">
+      <span>What Object A is doing right now</span>
+      <strong id="actualNowEquation">
+        At this moment, vA(t) = +0.00 m/s
+      </strong>
+    </div>
+
+  </div>
+
+
+  <!-- TEACHING MESSAGE -->
+  <div class="teaching-message">
+
+    <strong id="teachingTitle">
+      Average velocity is a summary of the whole interval.
+    </strong>
+
+    <p id="teachingText">
+      Object A does not need to move at the average velocity at every
+      instant. It only needs to have the same overall displacement in
+      the same total time.
+    </p>
+
+  </div>
+
+</div>
+
+
+<style>
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 28px;
+  background: #080b11;
+  color: #f4f7fb;
+  font-family: Inter, Arial, sans-serif;
+}
+
+#avgVelocityLab {
+  max-width: 1180px;
+  margin: auto;
+}
+
+h1, h2, p {
+  margin-top: 0;
+}
+
+/* HEADER */
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 22px;
+}
+
+h1 {
+  margin-bottom: 7px;
+  font-size: 30px;
+}
+
+.header p {
+  margin-bottom: 0;
+  max-width: 760px;
+  color: #a7b1c0;
+  line-height: 1.55;
+}
+
+.equation-card {
+  min-width: 210px;
+  padding: 15px 18px;
+  border: 1px solid #354052;
+  border-radius: 13px;
+  background: #111722;
+}
+
+.equation-card span,
+.value-card span,
+.slider-heading label,
+.equation-box span {
+  display: block;
+  color: #909baa;
+  font-size: 12px;
+}
+
+.equation-card strong {
+  display: block;
+  margin-top: 6px;
+  font: 24px Georgia, serif;
+}
+
+
+/* VALUE GRID */
+
+.value-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.value-card {
+  padding: 14px;
+  border: 1px solid #303948;
+  border-radius: 13px;
+  background: #111722;
+}
+
+.value-card strong {
+  display: block;
+  margin-top: 6px;
+  font-size: 22px;
+}
+
+.value-card small {
+  display: block;
+  margin-top: 5px;
+  color: #7c8898;
+}
+
+.actual-card strong,
+.actual-velocity-card strong {
+  color: #74aaff;
+}
+
+.average-card strong,
+.average-velocity-card strong {
+  color: #c6a9ff;
+}
+
+.highlight-card strong {
+  color: #efb568;
+}
+
+
+/* CONTROLS */
+
+.controls-panel {
+  margin-top: 16px;
+  padding: 17px;
+  border: 1px solid #303948;
+  border-radius: 14px;
+  background: #111722;
+}
+
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+button {
+  min-height: 42px;
+  padding: 8px 14px;
+  border: 1px solid #3b4759;
+  border-radius: 8px;
+  background: #161e2a;
+  color: #f4f7fb;
+  font-weight: 700;
+  cursor: pointer;
+  transition: .15s ease;
+}
+
+button:hover {
+  background: #222e40;
+}
+
+button.primary {
+  border-color: #4d7bc7;
+  background: #315fae;
+}
+
+.time-control {
+  margin-top: 15px;
+}
+
+.slider-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  font-weight: 700;
+}
+
+input[type="range"] {
+  width: 100%;
+  margin-top: 14px;
+  accent-color: #6d9de4;
+  cursor: pointer;
+}
+
+.time-scale {
+  display: flex;
+  justify-content: space-between;
+  color: #7a8697;
+  font-size: 11px;
+}
+
+.preset-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 13px;
+}
+
+
+/* PANELS */
+
+.track-panel,
+.graph-panel {
+  margin-top: 18px;
+  padding: 15px;
+  border: 1px solid #303948;
+  border-radius: 16px;
+  background: #0f141d;
+}
+
+.panel-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.panel-heading h2 {
+  margin-bottom: 5px;
+  font-size: 18px;
+}
+
+.panel-heading p {
+  margin-bottom: 0;
+  color: #939dad;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.status-badge,
+.graph-badge {
+  flex-shrink: 0;
+  padding: 9px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.status-badge {
+  background: #18273d;
+  color: #b8d4ff;
+}
+
+.graph-badge {
+  background: #2b2339;
+  color: #d2bcff;
+}
+
+
+/* SVG GENERAL */
+
+svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.axis {
+  stroke: #adb7c6;
+  stroke-width: 2;
+}
+
+.axis-arrow {
+  fill: #adb7c6;
+}
+
+.axis-label {
+  fill: #bec6d2;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+
+/* TRACK */
+
+.track-line {
+  stroke: #7c8798;
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+
+.progress-line {
+  stroke-width: 7;
+  stroke-linecap: round;
+}
+
+.actual-progress {
+  stroke: #74aaff;
+}
+
+.average-progress {
+  stroke: #c6a9ff;
+}
+
+.endpoint {
+  stroke-width: 3;
+}
+
+.start-endpoint {
+  fill: #111722;
+  stroke: #efb568;
+}
+
+.finish-endpoint {
+  fill: #111722;
+  stroke: #81d2b0;
+}
+
+.endpoint-label {
+  fill: #92a0b2;
+  font-size: 12px;
+}
+
+.lane-title {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.actual-lane-title {
+  fill: #9cc7ff;
+}
+
+.average-lane-title {
+  fill: #d7c2ff;
+}
+
+.object {
+  stroke-width: 4;
+}
+
+.actual-object {
+  fill: #f4f7fb;
+  stroke: #6d7a8c;
+}
+
+.average-object {
+  fill: #f4f7fb;
+  stroke: #6e5f93;
+}
+
+.object-inner {
+  fill: #74aaff;
+}
+
+.average-inner {
+  fill: #c6a9ff;
+}
+
+.object-label {
+  fill: #e5ebf3;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.average-object-label {
+  fill: #ece2ff;
+}
+
+
+/* GRAPH */
+
+.grid-line {
+  stroke: #27313f;
+  stroke-width: 1;
+}
+
+.grid-label {
+  fill: #748193;
+  font-size: 11px;
+}
+
+.actual-path {
+  fill: none;
+  stroke: #74aaff;
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+
+.average-path {
+  fill: none;
+  stroke: #c6a9ff;
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+
+.time-cursor {
+  stroke: #efb568;
+  stroke-width: 2;
+  stroke-dasharray: 8 7;
+}
+
+.actual-graph-point {
+  fill: #74aaff;
+  stroke: #d7e8ff;
+  stroke-width: 2;
+}
+
+.average-graph-point {
+  fill: #c6a9ff;
+  stroke: #f0e6ff;
+  stroke-width: 2;
+}
+
+.endpoint-graph {
+  fill: #efb568;
+}
+
+.legend-box {
+  fill: #111722;
+  stroke: #334050;
+  stroke-width: 1;
+}
+
+.legend-line {
+  stroke-width: 4;
+}
+
+.legend-text {
+  fill: #d7dfe9;
+  font-size: 13px;
+}
+
+
+/* EQUATION PANEL */
+
+.equation-panel {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.equation-box {
+  padding: 16px;
+  border: 1px solid #303948;
+  border-radius: 13px;
+  background: #111722;
+}
+
+.equation-box strong {
+  display: block;
+  margin-top: 6px;
+  font: 20px Georgia, serif;
+  line-height: 1.45;
+}
+
+.summary-box strong {
+  color: #dce4ef;
+}
+
+.average-velocity-box strong {
+  color: #efc68e;
+}
+
+.actual-now-box strong {
+  color: #9cc7ff;
+}
+
+
+/* TEACHING MESSAGE */
+
+.teaching-message {
+  margin-top: 18px;
+  padding: 18px;
+  border-left: 4px solid #74aaff;
+  border-radius: 9px;
+  background: #111a26;
+}
+
+.teaching-message strong {
+  font-size: 18px;
+}
+
+.teaching-message p {
+  margin: 7px 0 0;
+  color: #a6b0bf;
+  line-height: 1.6;
+}
+
+
+/* RESPONSIVE */
+
+@media(max-width:1100px) {
+  .value-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media(max-width:760px) {
+  body {
+    padding: 12px;
+  }
+
+  .header,
+  .panel-heading,
+  .slider-heading {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .value-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media(max-width:480px) {
+  .value-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+</style>
+
+
+<script>
+
+(() => {
+
+  /*
+  ============================================================
+  INTERVAL DATA
+  ============================================================
+
+  Whole interval:
+      xi = 0 m
+      xf = 12 m
+      ti = 0 s
+      tf = 12 s
+
+  Hence
+      vbar = (12 - 0)/(12 - 0) = 1 m/s
+
+  Object A follows a more complicated motion:
+      0.0 - 2.5 s   : move 0 -> 5 m
+      2.5 - 4.0 s   : pause at 5 m
+      4.0 - 6.0 s   : reverse 5 -> 3 m
+      6.0 - 9.5 s   : move 3 -> 9 m
+      9.5 - 12.0 s  : move 9 -> 12 m
+
+  The motion in moving segments uses easing so velocity changes within
+  the segment, making the motion feel less artificial.
+  */
+
+  const tMin = 0;
+  const tMax = 12;
+  const xStart = 0;
+  const xFinish = 12;
+  const averageVelocity = (xFinish - xStart) / (tMax - tMin);
+
+  let currentTime = 0;
+  let playing = false;
+  let animationFrame = null;
+  let lastTimestamp = null;
+
+
+  /*
+  ============================================================
+  SVG GEOMETRY
+  ============================================================
+  */
+
+  const trackLeft = 120;
+  const trackRight = 900;
+
+  const graphLeft = 100;
+  const graphRight = 920;
+  const graphTop = 70;
+  const graphBottom = 430;
+
+
+  function trackX(x) {
+    return trackLeft + (x / xFinish) * (trackRight - trackLeft);
+  }
+
+  function graphX(t) {
+    return graphLeft + ((t - tMin) / (tMax - tMin)) * (graphRight - graphLeft);
+  }
+
+  function graphY(x) {
+    return graphBottom - ((x - xStart) / (xFinish - xStart)) * (graphBottom - graphTop);
+  }
+
+
+  /*
+  ============================================================
+  MOTION MODEL
+  ============================================================
+  */
+
+  function easeInOut(p) {
+    return p < 0.5
+      ? 2 * p * p
+      : 1 - Math.pow(-2 * p + 2, 2) / 2;
+  }
+
+  function interpolateMotion(t, t0, t1, x0, x1) {
+    const p = (t - t0) / (t1 - t0);
+    return x0 + (x1 - x0) * easeInOut(p);
+  }
+
+  function xActual(t) {
+
+    t = Math.max(tMin, Math.min(tMax, t));
+
+    if (t <= 2.5) {
+      return interpolateMotion(t, 0, 2.5, 0, 5);
+    }
+
+    if (t <= 4.0) {
+      return 5;
+    }
+
+    if (t <= 6.0) {
+      return interpolateMotion(t, 4.0, 6.0, 5, 3);
+    }
+
+    if (t <= 9.5) {
+      return interpolateMotion(t, 6.0, 9.5, 3, 9);
+    }
+
+    return interpolateMotion(t, 9.5, 12.0, 9, 12);
+  }
+
+  function xAverage(t) {
+    t = Math.max(tMin, Math.min(tMax, t));
+    return xStart + averageVelocity * t;
+  }
+
+  function vActual(t) {
+    const h = 0.01;
+
+    if (t <= tMin + h) {
+      return (xActual(t + h) - xActual(t)) / h;
+    }
+
+    if (t >= tMax - h) {
+      return (xActual(t) - xActual(t - h)) / h;
+    }
+
+    return (xActual(t + h) - xActual(t - h)) / (2 * h);
+  }
+
+  function motionPhase(t) {
+
+    if (t < 0.02) {
+      return "start";
+    }
+
+    if (t < 2.5) {
+      return "forward-1";
+    }
+
+    if (t < 4.0) {
+      return "pause";
+    }
+
+    if (t < 6.0) {
+      return "reverse";
+    }
+
+    if (t < 9.5) {
+      return "forward-2";
+    }
+
+    if (t < 12.0) {
+      return "finish-run";
+    }
+
+    return "done";
+  }
+
+
+  /*
+  ============================================================
+  DOM
+  ============================================================
+  */
+
+  const timeSlider = document.getElementById("timeSlider");
+  const actualPath = document.getElementById("actualPath");
+  const averagePath = document.getElementById("averagePath");
+  const graphGrid = document.getElementById("graphGrid");
+
+  const actualObject = document.getElementById("actualObject");
+  const actualInner = document.getElementById("actualInner");
+  const averageObject = document.getElementById("averageObject");
+  const averageInner = document.getElementById("averageInner");
+
+  const actualProgress = document.getElementById("actualProgress");
+  const averageProgress = document.getElementById("averageProgress");
+
+  const actualObjectLabel = document.getElementById("actualObjectLabel");
+  const averageObjectLabel = document.getElementById("averageObjectLabel");
+
+  const timeCursor = document.getElementById("timeCursor");
+  const actualGraphPoint = document.getElementById("actualGraphPoint");
+  const averageGraphPoint = document.getElementById("averageGraphPoint");
+
+
+  /*
+  ============================================================
+  HELPERS
+  ============================================================
+  */
+
+  function signed(value, digits = 2) {
+    if (Math.abs(value) < 0.00001) {
+      value = 0;
+    }
+    return value > 0 ? "+" + value.toFixed(digits) : value.toFixed(digits);
+  }
+
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+  }
+
+  function phaseText(phase) {
+
+    if (phase === "start") {
+      return {
+        badge: "Start of the interval",
+        title: "Average velocity is defined over the whole interval.",
+        text: "At the beginning, both objects are together at the same initial position. The average velocity depends on where the interval begins and ends, not on how the motion looks inside the interval."
+      };
+    }
+
+    if (phase === "forward-1") {
+      return {
+        badge: "Object A is moving forward",
+        title: "Object A does not have to match the average velocity now.",
+        text: "At this stage Object A is moving forward with changing speed. It may be faster than the average velocity for part of the interval."
+      };
+    }
+
+    if (phase === "pause") {
+      return {
+        badge: "Object A is paused",
+        title: "Average velocity does not mean the object was always moving.",
+        text: "Object A is momentarily at rest, so its current velocity is zero. But the whole-interval average velocity is still +1.00 m/s because the endpoints of the interval have not changed."
+      };
+    }
+
+    if (phase === "reverse") {
+      return {
+        badge: "Object A is reversing",
+        title: "Average velocity can be positive even while the object moves backward.",
+        text: "Here Object A has a negative current velocity, yet the average velocity over the entire interval remains positive because the final displacement is still positive."
+      };
+    }
+
+    if (phase === "forward-2") {
+      return {
+        badge: "Object A moves forward again",
+        title: "The complicated motion is still compatible with the same average velocity.",
+        text: "Object A is correcting for the earlier pause and reversal. Its detailed motion is complicated, but the average velocity only summarises the interval from start to finish."
+      };
+    }
+
+    if (phase === "finish-run") {
+      return {
+        badge: "Approaching the common finish",
+        title: "Object B is the constant-velocity model for the interval.",
+        text: "Object B travels steadily at the average velocity. Object A does not, but both are arranged to end at the same final position at the same final time."
+      };
+    }
+
+    return {
+      badge: "Both finish together",
+      title: "Average velocity is a summary, not a speedometer reading.",
+      text: "Both objects started together and finished together. Object B maintained the constant average velocity throughout. Object A did not. That is exactly why average velocity should be understood as a whole-interval summary."
+    };
+  }
+
+
+  /*
+  ============================================================
+  STATIC DRAWING
+  ============================================================
+  */
+
+  function drawGraphGrid() {
+
+    for (let t = 0; t <= 12; t += 1) {
+      const x = graphX(t);
+
+      const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+      line.setAttribute("x1", x);
+      line.setAttribute("x2", x);
+      line.setAttribute("y1", graphTop);
+      line.setAttribute("y2", graphBottom);
+      line.setAttribute("class", "grid-line");
+      graphGrid.appendChild(line);
+
+      if (t < 12.001) {
+        const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        label.setAttribute("x", x);
+        label.setAttribute("y", graphBottom + 27);
+        label.setAttribute("text-anchor", "middle");
+        label.setAttribute("class", "grid-label");
+        label.textContent = t;
+        graphGrid.appendChild(label);
+      }
+    }
+
+    for (let xVal = 0; xVal <= 12; xVal += 1) {
+      const y = graphY(xVal);
+
+      const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+      line.setAttribute("x1", graphLeft);
+      line.setAttribute("x2", graphRight);
+      line.setAttribute("y1", y);
+      line.setAttribute("y2", y);
+      line.setAttribute("class", "grid-line");
+      graphGrid.appendChild(line);
+
+      const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      label.setAttribute("x", graphLeft - 14);
+      label.setAttribute("y", y + 4);
+      label.setAttribute("text-anchor", "end");
+      label.setAttribute("class", "grid-label");
+      label.textContent = xVal;
+      graphGrid.appendChild(label);
+    }
+  }
+
+  function buildPath(fn) {
+    let d = "";
+
+    const steps = 320;
+
+    for (let i = 0; i <= steps; i++) {
+      const t = tMin + (tMax - tMin) * i / steps;
+      const x = graphX(t);
+      const y = graphY(fn(t));
+
+      d += (i === 0 ? "M " : " L ") + x + " " + y;
+    }
+
+    return d;
+  }
+
+  function drawStaticPaths() {
+    actualPath.setAttribute("d", buildPath(xActual));
+    averagePath.setAttribute("d", buildPath(xAverage));
+  }
+
+
+  /*
+  ============================================================
+  UPDATE
+  ============================================================
+  */
+
+  function update() {
+
+    currentTime = clamp(currentTime, tMin, tMax);
+
+    const xA = xActual(currentTime);
+    const xB = xAverage(currentTime);
+    const vA = vActual(currentTime);
+
+    const actualTrackPos = trackX(xA);
+    const averageTrackPos = trackX(xB);
+
+    const actualGraphX = graphX(currentTime);
+    const actualGraphYNow = graphY(xA);
+    const averageGraphYNow = graphY(xB);
+
+    /*
+      Top cards
+    */
+
+    document.getElementById("timeDisplay").textContent =
+      currentTime.toFixed(2) + " s";
+
+    document.getElementById("actualPositionDisplay").textContent =
+      xA.toFixed(2) + " m";
+
+    document.getElementById("actualVelocityDisplay").textContent =
+      signed(vA) + " m/s";
+
+    document.getElementById("averagePositionDisplay").textContent =
+      xB.toFixed(2) + " m";
+
+    document.getElementById("constantVelocityDisplay").textContent =
+      signed(averageVelocity) + " m/s";
+
+    document.getElementById("averageVelocityDisplay").textContent =
+      signed(averageVelocity) + " m/s";
+
+    document.getElementById("sliderReadout").textContent =
+      "t = " + currentTime.toFixed(2) + " s";
+
+    timeSlider.value = currentTime;
+
+
+    /*
+      Track positions
+    */
+
+    actualObject.setAttribute("cx", actualTrackPos);
+    actualInner.setAttribute("cx", actualTrackPos);
+    averageObject.setAttribute("cx", averageTrackPos);
+    averageInner.setAttribute("cx", averageTrackPos);
+
+    actualProgress.setAttribute("x2", actualTrackPos);
+    averageProgress.setAttribute("x2", averageTrackPos);
+
+    actualObjectLabel.setAttribute("x", actualTrackPos);
+    averageObjectLabel.setAttribute("x", averageTrackPos);
+
+    actualObjectLabel.textContent =
+      "xA = " + xA.toFixed(2) + " m";
+
+    averageObjectLabel.textContent =
+      "xB = " + xB.toFixed(2) + " m";
+
+
+    /*
+      Graph cursor and points
+    */
+
+    timeCursor.setAttribute("x1", actualGraphX);
+    timeCursor.setAttribute("x2", actualGraphX);
+
+    actualGraphPoint.setAttribute("cx", actualGraphX);
+    actualGraphPoint.setAttribute("cy", actualGraphYNow);
+
+    averageGraphPoint.setAttribute("cx", actualGraphX);
+    averageGraphPoint.setAttribute("cy", averageGraphYNow);
+
+
+    /*
+      Equations
+    */
+
+    document.getElementById("intervalSummary").textContent =
+      "xᵢ = 0.00 m, x_f = 12.00 m, Δt = 12.00 s";
+
+    document.getElementById("averageVelocityEquation").textContent =
+      "v̄ = (12.00 − 0.00) / (12.00 − 0.00) = " +
+      signed(averageVelocity) + " m/s";
+
+    document.getElementById("actualNowEquation").textContent =
+      "At this moment, vA(t) = " + signed(vA) + " m/s";
+
+
+    /*
+      Teaching message
+    */
+
+    const phase = motionPhase(currentTime);
+    const message = phaseText(phase);
+
+    document.getElementById("statusBadge").textContent = message.badge;
+    document.getElementById("teachingTitle").textContent = message.title;
+    document.getElementById("teachingText").textContent = message.text;
+
+  }
+
+
+  /*
+  ============================================================
+  ANIMATION
+  ============================================================
+  */
+
+  function animate(timestamp) {
+
+    if (!playing) {
+      return;
+    }
+
+    if (lastTimestamp === null) {
+      lastTimestamp = timestamp;
+    }
+
+    const dt = (timestamp - lastTimestamp) / 1000;
+    lastTimestamp = timestamp;
+
+    currentTime += dt;
+
+    if (currentTime >= tMax) {
+      currentTime = tMax;
+      playing = false;
+      lastTimestamp = null;
+    }
+
+    update();
+
+    if (playing) {
+      animationFrame = requestAnimationFrame(animate);
+    }
+  }
+
+  function play() {
+    if (currentTime >= tMax) {
+      currentTime = 0;
+    }
+
+    if (playing) {
+      return;
+    }
+
+    playing = true;
+    lastTimestamp = null;
+    animationFrame = requestAnimationFrame(animate);
+  }
+
+  function pause() {
+    playing = false;
+    lastTimestamp = null;
+
+    if (animationFrame) {
+      cancelAnimationFrame(animationFrame);
+    }
+  }
+
+  function reset() {
+    pause();
+    currentTime = 0;
+    update();
+  }
+
+
+  /*
+  ============================================================
+  EVENTS
+  ============================================================
+  */
+
+  document.getElementById("playButton").addEventListener("click", play);
+  document.getElementById("pauseButton").addEventListener("click", pause);
+  document.getElementById("resetButton").addEventListener("click", reset);
+
+  document.getElementById("finishButton").addEventListener("click", () => {
+    pause();
+    currentTime = tMax;
+    update();
+  });
+
+  timeSlider.addEventListener("input", () => {
+    pause();
+    currentTime = Number(timeSlider.value);
+    update();
+  });
+
+  document.querySelectorAll(".preset").forEach(button => {
+    button.addEventListener("click", () => {
+      pause();
+      currentTime = Number(button.dataset.time);
+      update();
+    });
+  });
+
+
+  /*
+  ============================================================
+  INITIALISE
+  ============================================================
+  */
+
+  drawGraphGrid();
+  drawStaticPaths();
+  update();
+
+})();
+
+</script>
