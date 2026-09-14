@@ -1,0 +1,751 @@
+<div id="vectorScalingViz">
+
+  <div class="header">
+    <div>
+      <h1>Vector Scaling Visualizer</h1>
+      <p>
+        Change the scalar <strong>k</strong> and watch how it changes
+        the length and direction of the vector.
+      </p>
+    </div>
+
+    <div class="equation">
+      kA
+    </div>
+  </div>
+
+
+  <!-- LIVE VALUES -->
+  <div class="values">
+
+    <div>
+      <span>Scalar</span>
+      <strong id="kValue">1.00</strong>
+      <small>k</small>
+    </div>
+
+    <div>
+      <span>Original magnitude</span>
+      <strong>3.00</strong>
+      <small>|A|</small>
+    </div>
+
+    <div>
+      <span>Scaled magnitude</span>
+      <strong id="scaledMagnitude">3.00</strong>
+      <small>|kA| = |k||A|</small>
+    </div>
+
+    <div>
+      <span>Direction</span>
+      <strong id="directionValue">Same</strong>
+      <small id="directionExplanation">k &gt; 0</small>
+    </div>
+
+  </div>
+
+
+  <!-- SLIDER -->
+  <div class="controls">
+
+    <div class="slider-heading">
+      <label for="kSlider">
+        Scale factor k
+      </label>
+
+      <strong id="kSliderValue">
+        k = 1.00
+      </strong>
+    </div>
+
+    <input
+      id="kSlider"
+      type="range"
+      min="-3"
+      max="3"
+      step="0.05"
+      value="1"
+    />
+
+    <div class="scale">
+      <span>−3</span>
+      <span>−2</span>
+      <span>−1</span>
+      <span>0</span>
+      <span>1</span>
+      <span>2</span>
+      <span>3</span>
+    </div>
+
+
+    <div class="preset-buttons">
+      <button data-k="2">2A</button>
+      <button data-k="0.5">½A</button>
+      <button data-k="-2">−2A</button>
+      <button data-k="-1">−A</button>
+      <button data-k="0">0A</button>
+      <button data-k="1">A</button>
+    </div>
+
+  </div>
+
+
+  <!-- VISUAL -->
+  <div class="visual-panel">
+
+    <svg
+      id="vectorSvg"
+      viewBox="0 0 850 330"
+      aria-label="Original vector and its scaled version"
+    >
+
+      <defs>
+
+        <marker
+          id="arrowOriginal"
+          markerWidth="10"
+          markerHeight="10"
+          refX="8"
+          refY="5"
+          orient="auto"
+          markerUnits="strokeWidth"
+        >
+          <path
+            d="M0,0 L10,5 L0,10 Z"
+            fill="#8794a8"
+          />
+        </marker>
+
+
+        <marker
+          id="arrowScaled"
+          markerWidth="10"
+          markerHeight="10"
+          refX="8"
+          refY="5"
+          orient="auto"
+          markerUnits="strokeWidth"
+        >
+          <path
+            d="M0,0 L10,5 L0,10 Z"
+            fill="#efb568"
+          />
+        </marker>
+
+      </defs>
+
+
+      <!-- AXIS -->
+      <line
+        x1="70"
+        y1="180"
+        x2="780"
+        y2="180"
+        class="axis"
+      />
+
+      <line
+        x1="425"
+        y1="70"
+        x2="425"
+        y2="280"
+        class="axis vertical"
+      />
+
+
+      <circle
+        cx="425"
+        cy="180"
+        r="6"
+        class="origin"
+      />
+
+
+      <!-- ORIGINAL VECTOR -->
+      <line
+        x1="425"
+        y1="180"
+        x2="545"
+        y2="180"
+        class="original-vector"
+        marker-end="url(#arrowOriginal)"
+      />
+
+      <text
+        x="485"
+        y="155"
+        text-anchor="middle"
+        class="original-label"
+      >
+        A
+      </text>
+
+
+      <!-- SCALED VECTOR -->
+      <line
+        id="scaledVector"
+        x1="425"
+        y1="180"
+        x2="545"
+        y2="180"
+        class="scaled-vector"
+        marker-end="url(#arrowScaled)"
+      />
+
+      <text
+        id="scaledLabel"
+        x="485"
+        y="220"
+        text-anchor="middle"
+        class="scaled-label"
+      >
+        kA
+      </text>
+
+
+      <!-- ZERO VECTOR DOT -->
+      <circle
+        id="zeroVector"
+        cx="425"
+        cy="180"
+        r="12"
+        class="zero-vector"
+      />
+
+    </svg>
+
+  </div>
+
+
+  <!-- EXPLANATION -->
+  <div class="message">
+
+    <strong id="mainMessage">
+      Positive k preserves the vector's direction.
+    </strong>
+
+    <p id="messageText">
+      With k = 1, the scaled vector is identical to A.
+    </p>
+
+  </div>
+
+</div>
+
+
+<style>
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 26px;
+  background: #080b11;
+  color: #f4f7fb;
+  font-family: Inter, Arial, sans-serif;
+}
+
+#vectorScalingViz {
+  max-width: 900px;
+  margin: auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+h1 {
+  margin: 0 0 6px;
+  font-size: 27px;
+}
+
+.header p {
+  margin: 0;
+  color: #a5afbe;
+  line-height: 1.5;
+}
+
+.equation {
+  min-width: 110px;
+  padding: 14px 18px;
+  text-align: center;
+  border: 1px solid #344052;
+  border-radius: 12px;
+  background: #111722;
+  font: 27px Georgia, serif;
+}
+
+.values {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.values > div {
+  padding: 14px;
+  border: 1px solid #303948;
+  border-radius: 12px;
+  background: #111722;
+}
+
+.values span {
+  display: block;
+  color: #929dad;
+  font-size: 11px;
+}
+
+.values strong {
+  display: block;
+  margin-top: 5px;
+  font-size: 21px;
+}
+
+.values small {
+  display: block;
+  margin-top: 5px;
+  color: #7d8999;
+}
+
+.controls {
+  margin-top: 15px;
+  padding: 16px;
+  border: 1px solid #303948;
+  border-radius: 13px;
+  background: #111722;
+}
+
+.slider-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  font-weight: 700;
+}
+
+input[type="range"] {
+  width: 100%;
+  margin-top: 15px;
+  accent-color: #6a99df;
+}
+
+.scale {
+  display: flex;
+  justify-content: space-between;
+  color: #788596;
+  font-size: 11px;
+}
+
+.preset-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 13px;
+}
+
+button {
+  min-height: 40px;
+  padding: 8px 14px;
+  border: 1px solid #3a4658;
+  border-radius: 8px;
+  background: #161e2a;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #222e40;
+}
+
+.visual-panel {
+  margin-top: 15px;
+  padding: 12px;
+  border: 1px solid #303948;
+  border-radius: 15px;
+  background: #0f141d;
+}
+
+svg {
+  width: 100%;
+  display: block;
+}
+
+.axis {
+  stroke: #354052;
+  stroke-width: 2;
+}
+
+.axis.vertical {
+  opacity: 0.5;
+}
+
+.origin {
+  fill: #e6ebf2;
+}
+
+.original-vector {
+  stroke: #8794a8;
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+
+.scaled-vector {
+  stroke: #efb568;
+  stroke-width: 6;
+  stroke-linecap: round;
+}
+
+.original-label {
+  fill: #aab4c2;
+  font-size: 18px;
+  font-weight: 700;
+  font-style: italic;
+}
+
+.scaled-label {
+  fill: #f0c58a;
+  font-size: 19px;
+  font-weight: 700;
+  font-style: italic;
+}
+
+.zero-vector {
+  fill: #c5a2ff;
+  opacity: 0;
+}
+
+.message {
+  margin-top: 15px;
+  padding: 16px;
+  border-left: 4px solid #efb568;
+  border-radius: 8px;
+  background: #151820;
+}
+
+.message strong {
+  font-size: 17px;
+}
+
+.message p {
+  margin: 6px 0 0;
+  color: #a6b0bf;
+  line-height: 1.55;
+}
+
+@media(max-width:700px) {
+
+  body {
+    padding: 12px;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .values {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media(max-width:430px) {
+
+  .values {
+    grid-template-columns: 1fr;
+  }
+}
+
+</style>
+
+
+<script>
+
+(() => {
+
+  const originalMagnitude = 3;
+
+  const pixelsPerMagnitude = 40;
+
+  const originX = 425;
+  const originY = 180;
+
+
+  const slider =
+    document.getElementById("kSlider");
+
+  const scaledVector =
+    document.getElementById("scaledVector");
+
+  const scaledLabel =
+    document.getElementById("scaledLabel");
+
+  const zeroVector =
+    document.getElementById("zeroVector");
+
+
+  function clean(value) {
+
+    if (Math.abs(value) < 0.001)
+      return 0;
+
+    return value;
+  }
+
+
+  function update() {
+
+    const k =
+      clean(
+        Number(slider.value)
+      );
+
+
+    const scaledMagnitude =
+      Math.abs(k) *
+      originalMagnitude;
+
+
+    const length =
+      k *
+      originalMagnitude *
+      pixelsPerMagnitude;
+
+
+    const endX =
+      originX +
+      length;
+
+
+    /*
+      Arrow
+    */
+
+    scaledVector.setAttribute(
+      "x1",
+      originX
+    );
+
+    scaledVector.setAttribute(
+      "y1",
+      originY
+    );
+
+    scaledVector.setAttribute(
+      "x2",
+      endX
+    );
+
+    scaledVector.setAttribute(
+      "y2",
+      originY
+    );
+
+
+    /*
+      Zero vector state
+    */
+
+    if (k === 0) {
+
+      scaledVector.style.opacity = "0";
+
+      scaledLabel.style.opacity = "0";
+
+      zeroVector.style.opacity = "1";
+
+    }
+
+    else {
+
+      scaledVector.style.opacity = "1";
+
+      scaledLabel.style.opacity = "1";
+
+      zeroVector.style.opacity = "0";
+
+    }
+
+
+    /*
+      Label position
+    */
+
+    scaledLabel.setAttribute(
+      "x",
+      (
+        originX +
+        endX
+      ) / 2
+    );
+
+
+    scaledLabel.setAttribute(
+      "y",
+      originY + 42
+    );
+
+
+    scaledLabel.textContent =
+      k.toFixed(2) + "A";
+
+
+    /*
+      Numerical values
+    */
+
+    document
+      .getElementById("kValue")
+      .textContent =
+        k.toFixed(2);
+
+
+    document
+      .getElementById("kSliderValue")
+      .textContent =
+        "k = " +
+        k.toFixed(2);
+
+
+    document
+      .getElementById("scaledMagnitude")
+      .textContent =
+        scaledMagnitude.toFixed(2);
+
+
+    /*
+      Direction logic
+    */
+
+    const directionValue =
+      document.getElementById(
+        "directionValue"
+      );
+
+    const directionExplanation =
+      document.getElementById(
+        "directionExplanation"
+      );
+
+    const mainMessage =
+      document.getElementById(
+        "mainMessage"
+      );
+
+    const messageText =
+      document.getElementById(
+        "messageText"
+      );
+
+
+    if (k > 0) {
+
+      directionValue.textContent =
+        "Same";
+
+      directionExplanation.textContent =
+        "k > 0";
+
+
+      mainMessage.textContent =
+        "Positive k preserves the vector's direction.";
+
+
+      if (k > 1) {
+
+        messageText.textContent =
+          "|k| > 1 stretches the vector. Its direction stays the same, but its magnitude becomes larger.";
+
+      }
+
+      else if (k < 1) {
+
+        messageText.textContent =
+          "0 < |k| < 1 shortens the vector without changing its direction.";
+
+      }
+
+      else {
+
+        messageText.textContent =
+          "With k = 1, the scaled vector is exactly the original vector A.";
+
+      }
+
+    }
+
+
+    else if (k < 0) {
+
+      directionValue.textContent =
+        "Reversed";
+
+      directionExplanation.textContent =
+        "k < 0";
+
+
+      mainMessage.textContent =
+        "Negative k reverses the vector's direction.";
+
+
+      messageText.textContent =
+        "The magnitude is multiplied by |k|, while the negative sign flips the arrow by 180°.";
+
+    }
+
+
+    else {
+
+      directionValue.textContent =
+        "None";
+
+      directionExplanation.textContent =
+        "k = 0";
+
+
+      mainMessage.textContent =
+        "At k = 0, the vector collapses to the zero vector.";
+
+
+      messageText.textContent =
+        "Its magnitude is zero, so there is no arrow length and the zero vector has no direction.";
+
+    }
+
+  }
+
+
+  slider.addEventListener(
+    "input",
+    update
+  );
+
+
+  document
+    .querySelectorAll("[data-k]")
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          slider.value =
+            button.dataset.k;
+
+          update();
+
+        }
+      );
+
+    });
+
+
+  update();
+
+})();
+
+</script>
