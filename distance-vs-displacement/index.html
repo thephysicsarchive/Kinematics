@@ -1,0 +1,2947 @@
+<div id="distanceDisplacementLab">
+
+  <!-- HEADER -->
+  <div class="header">
+
+    <div>
+      <h1>Distance vs Displacement Lab</h1>
+
+      <p>
+        Drag the object along any path. Compare the total path travelled
+        with the straight-line displacement from start to finish.
+      </p>
+    </div>
+
+    <div class="equation-card">
+      <span>Always true</span>
+      <strong>d ≥ |Δr|</strong>
+    </div>
+
+  </div>
+
+
+  <!-- LIVE VALUES -->
+  <div class="value-grid">
+
+    <div class="value-card distance-card">
+      <span>Distance travelled</span>
+      <strong id="distanceValue">0.00 m</strong>
+      <small>d = total path length</small>
+    </div>
+
+    <div class="value-card displacement-card">
+      <span>Displacement magnitude</span>
+      <strong id="displacementValue">0.00 m</strong>
+      <small>|Δr| = straight-line separation</small>
+    </div>
+
+    <div class="value-card">
+      <span>Horizontal change</span>
+      <strong id="dxValue">0.00 m</strong>
+      <small>Δx</small>
+    </div>
+
+    <div class="value-card">
+      <span>Vertical change</span>
+      <strong id="dyValue">0.00 m</strong>
+      <small>Δy</small>
+    </div>
+
+  </div>
+
+
+  <!-- CONTROLS -->
+  <div class="controls">
+
+    <button
+      id="returnButton"
+      class="primary"
+      type="button"
+    >
+      ↩ Return to start
+    </button>
+
+    <button
+      id="resetButton"
+      type="button"
+    >
+      ↺ Reset journey
+    </button>
+
+    <button
+      id="clearTrailButton"
+      type="button"
+    >
+      Clear trail, keep position
+    </button>
+
+  </div>
+
+
+  <!-- MAIN PLANE -->
+  <div class="plane-panel">
+
+    <div class="panel-heading">
+
+      <div>
+        <h2>2D motion plane</h2>
+
+        <p>
+          Drag the white object anywhere. The blue line records the
+          actual route. The gold arrow shows displacement.
+        </p>
+      </div>
+
+      <div
+        id="statusBadge"
+        class="status-badge"
+      >
+        At the starting point
+      </div>
+
+    </div>
+
+
+    <svg
+      id="motionPlane"
+      viewBox="0 0 900 650"
+      role="img"
+      aria-label="Two-dimensional plane comparing travelled path with displacement"
+    >
+
+      <defs>
+
+        <!-- DISPLACEMENT ARROW -->
+        <marker
+          id="displacementArrow"
+          markerWidth="10"
+          markerHeight="10"
+          refX="8"
+          refY="5"
+          orient="auto"
+          markerUnits="strokeWidth"
+        >
+          <path
+            d="M 0 0 L 10 5 L 0 10 z"
+            fill="#efb568"
+          />
+        </marker>
+
+      </defs>
+
+
+      <!-- GRID -->
+      <g id="grid"></g>
+
+
+      <!-- AXES -->
+      <line
+        x1="60"
+        y1="325"
+        x2="840"
+        y2="325"
+        class="axis"
+      />
+
+      <line
+        x1="450"
+        y1="590"
+        x2="450"
+        y2="60"
+        class="axis"
+      />
+
+
+      <!-- AXIS ARROWS -->
+      <polygon
+        points="840,325 823,316 823,334"
+        class="axis-arrow"
+      />
+
+      <polygon
+        points="450,60 441,77 459,77"
+        class="axis-arrow"
+      />
+
+
+      <text
+        x="814"
+        y="307"
+        class="axis-label"
+      >
+        +x
+      </text>
+
+      <text
+        x="466"
+        y="78"
+        class="axis-label"
+      >
+        +y
+      </text>
+
+
+      <!-- ACTUAL TRAVELLED PATH -->
+      <polyline
+        id="travelPath"
+        points="450,325"
+        class="travel-path"
+      />
+
+
+      <!-- DISPLACEMENT VECTOR -->
+      <line
+        id="displacementLine"
+        x1="450"
+        y1="325"
+        x2="450"
+        y2="325"
+        class="displacement-line"
+        marker-end="url(#displacementArrow)"
+      />
+
+
+      <!-- DISPLACEMENT GUIDE COMPONENTS -->
+      <line
+        id="horizontalGuide"
+        x1="450"
+        y1="325"
+        x2="450"
+        y2="325"
+        class="guide horizontal-guide"
+      />
+
+      <line
+        id="verticalGuide"
+        x1="450"
+        y1="325"
+        x2="450"
+        y2="325"
+        class="guide vertical-guide"
+      />
+
+
+      <!-- START -->
+      <circle
+        cx="450"
+        cy="325"
+        r="12"
+        class="start-point"
+      />
+
+      <circle
+        cx="450"
+        cy="325"
+        r="4"
+        class="start-inner"
+      />
+
+      <text
+        x="450"
+        y="360"
+        text-anchor="middle"
+        class="start-label"
+      >
+        START
+      </text>
+
+
+      <!-- CURRENT OBJECT -->
+      <circle
+        id="movingObject"
+        cx="450"
+        cy="325"
+        r="22"
+        class="moving-object"
+      />
+
+      <circle
+        id="movingObjectInner"
+        cx="450"
+        cy="325"
+        r="8"
+        class="moving-object-inner"
+      />
+
+
+      <!-- CURRENT POSITION LABEL -->
+      <text
+        id="positionLabel"
+        x="450"
+        y="285"
+        text-anchor="middle"
+        class="position-label"
+      >
+        (0.00, 0.00) m
+      </text>
+
+
+      <!-- DISPLACEMENT LABEL -->
+      <text
+        id="displacementLabel"
+        x="450"
+        y="305"
+        text-anchor="middle"
+        class="displacement-label"
+      >
+        |Δr| = 0.00 m
+      </text>
+
+    </svg>
+
+
+    <div class="legend">
+
+      <div>
+        <span class="legend-line path-legend"></span>
+        Actual travelled path
+      </div>
+
+      <div>
+        <span class="legend-line displacement-legend"></span>
+        Displacement vector
+      </div>
+
+      <div>
+        <span class="legend-dot start-legend"></span>
+        Starting position
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- COMPARISON -->
+  <div class="comparison-panel">
+
+    <div class="comparison-side">
+
+      <span>Distance</span>
+
+      <strong id="distanceEquation">
+        d = 0.00 m
+      </strong>
+
+      <p>
+        Add the lengths of every small piece of the route.
+      </p>
+
+    </div>
+
+
+    <div class="inequality">
+
+      <div id="inequalityDisplay">
+        0.00 ≥ 0.00
+      </div>
+
+      <span>
+        d ≥ |Δr|
+      </span>
+
+    </div>
+
+
+    <div class="comparison-side">
+
+      <span>Displacement magnitude</span>
+
+      <strong id="displacementEquation">
+        |Δr| = √(0.00² + 0.00²)
+      </strong>
+
+      <p>
+        Ignore the route and connect the start directly to the finish.
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <!-- RATIO -->
+  <div class="efficiency-panel">
+
+    <div>
+
+      <span>How direct was the journey?</span>
+
+      <strong id="routeRatio">
+        No journey yet
+      </strong>
+
+    </div>
+
+
+    <div class="ratio-track">
+
+      <div id="ratioFill"></div>
+
+    </div>
+
+
+    <p id="ratioExplanation">
+      Start dragging the object to create a travelled path.
+    </p>
+
+  </div>
+
+
+  <!-- RETURN-TO-START RESULT -->
+  <div
+    id="returnResult"
+    class="return-result"
+  >
+
+    <span>Closed journey</span>
+
+    <strong>
+      Δr = 0 does not imply d = 0
+    </strong>
+
+    <p id="returnResultText">
+      Return to the starting position after travelling a non-zero path
+      to see the distinction.
+    </p>
+
+  </div>
+
+
+  <!-- CORE IDEA -->
+  <div class="teaching-message">
+
+    <strong id="teachingTitle">
+      Distance remembers the route. Displacement remembers only the endpoints.
+    </strong>
+
+    <p id="teachingText">
+      For a straight journey from the start to the current point,
+      distance and displacement magnitude can be equal. Any detour makes
+      the travelled distance larger while the displacement depends only
+      on the final separation.
+    </p>
+
+  </div>
+
+</div>
+
+
+<style>
+
+  * {
+    box-sizing: border-box;
+  }
+
+
+  body {
+
+    margin: 0;
+
+    padding: 28px;
+
+    background: #080b11;
+
+    color: #f4f7fb;
+
+    font-family:
+      Inter,
+      Arial,
+      sans-serif;
+
+  }
+
+
+  #distanceDisplacementLab {
+
+    max-width: 1150px;
+
+    margin: auto;
+
+  }
+
+
+  h1,
+  h2,
+  p {
+
+    margin-top: 0;
+
+  }
+
+
+  /* HEADER */
+
+  .header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 22px;
+
+    margin-bottom: 20px;
+
+  }
+
+
+  h1 {
+
+    margin-bottom: 7px;
+
+    font-size: 30px;
+
+  }
+
+
+  .header p {
+
+    max-width: 720px;
+
+    margin-bottom: 0;
+
+    color: #a8b2c1;
+
+    line-height: 1.55;
+
+  }
+
+
+  .equation-card {
+
+    min-width: 180px;
+
+    padding: 15px 19px;
+
+    border:
+      1px solid #354052;
+
+    border-radius: 13px;
+
+    background: #111722;
+
+  }
+
+
+  .equation-card span,
+  .value-card span,
+  .comparison-side > span,
+  .efficiency-panel span,
+  .return-result > span {
+
+    display: block;
+
+    color: #909baa;
+
+    font-size: 12px;
+
+  }
+
+
+  .equation-card strong {
+
+    display: block;
+
+    margin-top: 6px;
+
+    font:
+      26px Georgia,
+      serif;
+
+  }
+
+
+  /* LIVE VALUES */
+
+  .value-grid {
+
+    display: grid;
+
+    grid-template-columns:
+      repeat(4, 1fr);
+
+    gap: 11px;
+
+  }
+
+
+  .value-card {
+
+    padding: 15px;
+
+    border:
+      1px solid #303948;
+
+    border-radius: 13px;
+
+    background: #111722;
+
+  }
+
+
+  .value-card strong {
+
+    display: block;
+
+    margin-top: 6px;
+
+    font-size: 23px;
+
+  }
+
+
+  .value-card small {
+
+    display: block;
+
+    margin-top: 5px;
+
+    color: #798596;
+
+  }
+
+
+  .distance-card strong {
+
+    color: #74aaff;
+
+  }
+
+
+  .displacement-card strong {
+
+    color: #efb568;
+
+  }
+
+
+  /* CONTROLS */
+
+  .controls {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+
+    margin-top: 15px;
+
+  }
+
+
+  button {
+
+    min-height: 44px;
+
+    padding: 9px 16px;
+
+    border:
+      1px solid #3b4759;
+
+    border-radius: 9px;
+
+    background: #161e2a;
+
+    color: #f4f7fb;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+  }
+
+
+  button:hover {
+
+    background: #222e40;
+
+  }
+
+
+  button.primary {
+
+    border-color: #527eca;
+
+    background: #315fae;
+
+  }
+
+
+  /* PLANE */
+
+  .plane-panel {
+
+    margin-top: 17px;
+
+    padding: 15px;
+
+    border:
+      1px solid #303948;
+
+    border-radius: 17px;
+
+    background: #0f141d;
+
+  }
+
+
+  .panel-heading {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-start;
+
+    gap: 15px;
+
+  }
+
+
+  .panel-heading h2 {
+
+    margin-bottom: 5px;
+
+    font-size: 18px;
+
+  }
+
+
+  .panel-heading p {
+
+    margin-bottom: 0;
+
+    color: #909baa;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+
+  }
+
+
+  .status-badge {
+
+    flex-shrink: 0;
+
+    padding: 9px 12px;
+
+    border-radius: 8px;
+
+    background: #19263a;
+
+    color: #acd0ff;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+  }
+
+
+  svg {
+
+    display: block;
+
+    width: 100%;
+
+    height: auto;
+
+    touch-action: none;
+
+    user-select: none;
+
+  }
+
+
+  /* GRID */
+
+  .grid-line {
+
+    stroke: #26303d;
+
+    stroke-width: 1;
+
+  }
+
+
+  .grid-line-major {
+
+    stroke: #344052;
+
+    stroke-width: 1.2;
+
+  }
+
+
+  .grid-label {
+
+    fill: #748193;
+
+    font-size: 11px;
+
+  }
+
+
+  .axis {
+
+    stroke: #aeb8c7;
+
+    stroke-width: 2;
+
+  }
+
+
+  .axis-arrow {
+
+    fill: #aeb8c7;
+
+  }
+
+
+  .axis-label {
+
+    fill: #c2cad5;
+
+    font-size: 16px;
+
+    font-weight: 700;
+
+  }
+
+
+  /* PATH */
+
+  .travel-path {
+
+    fill: none;
+
+    stroke: #6ea5f2;
+
+    stroke-width: 5;
+
+    stroke-linecap: round;
+
+    stroke-linejoin: round;
+
+  }
+
+
+  .displacement-line {
+
+    stroke: #efb568;
+
+    stroke-width: 4;
+
+    stroke-linecap: round;
+
+  }
+
+
+  .guide {
+
+    stroke-width: 1.5;
+
+    stroke-dasharray: 7 6;
+
+  }
+
+
+  .horizontal-guide {
+
+    stroke: #728399;
+
+  }
+
+
+  .vertical-guide {
+
+    stroke: #728399;
+
+  }
+
+
+  /* START */
+
+  .start-point {
+
+    fill: #ba9af4;
+
+    stroke: #e0d2ff;
+
+    stroke-width: 3;
+
+  }
+
+
+  .start-inner {
+
+    fill: #f4edff;
+
+  }
+
+
+  .start-label {
+
+    fill: #cdb9fa;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+  }
+
+
+  /* OBJECT */
+
+  .moving-object {
+
+    fill: #f5f7fb;
+
+    stroke: #6e7b8d;
+
+    stroke-width: 4;
+
+    cursor: grab;
+
+  }
+
+
+  .moving-object:active {
+
+    cursor: grabbing;
+
+  }
+
+
+  .moving-object-inner {
+
+    fill: #5e92e6;
+
+    pointer-events: none;
+
+  }
+
+
+  .position-label {
+
+    fill: #e7edf5;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    pointer-events: none;
+
+  }
+
+
+  .displacement-label {
+
+    fill: #f1c688;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    pointer-events: none;
+
+  }
+
+
+  /* LEGEND */
+
+  .legend {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 19px;
+
+    color: #9ca7b7;
+
+    font-size: 12px;
+
+  }
+
+
+  .legend > div {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+  }
+
+
+  .legend-line {
+
+    width: 25px;
+
+    height: 4px;
+
+    border-radius: 10px;
+
+  }
+
+
+  .path-legend {
+
+    background: #6ea5f2;
+
+  }
+
+
+  .displacement-legend {
+
+    background: #efb568;
+
+  }
+
+
+  .legend-dot {
+
+    width: 12px;
+
+    height: 12px;
+
+    border-radius: 50%;
+
+  }
+
+
+  .start-legend {
+
+    background: #ba9af4;
+
+  }
+
+
+  /* COMPARISON */
+
+  .comparison-panel {
+
+    display: grid;
+
+    grid-template-columns:
+      1fr auto 1fr;
+
+    align-items: center;
+
+    gap: 18px;
+
+    margin-top: 17px;
+
+  }
+
+
+  .comparison-side {
+
+    padding: 18px;
+
+    border:
+      1px solid #303948;
+
+    border-radius: 13px;
+
+    background: #111722;
+
+  }
+
+
+  .comparison-side strong {
+
+    display: block;
+
+    margin-top: 6px;
+
+    font:
+      21px Georgia,
+      serif;
+
+  }
+
+
+  .comparison-side p {
+
+    margin:
+      8px 0 0;
+
+    color: #9da7b6;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+
+  }
+
+
+  .inequality {
+
+    text-align: center;
+
+  }
+
+
+  #inequalityDisplay {
+
+    font:
+      26px Georgia,
+      serif;
+
+  }
+
+
+  .inequality span {
+
+    display: block;
+
+    margin-top: 5px;
+
+    color: #8e99aa;
+
+    font-size: 12px;
+
+  }
+
+
+  /* RATIO */
+
+  .efficiency-panel {
+
+    margin-top: 17px;
+
+    padding: 17px;
+
+    border:
+      1px solid #303948;
+
+    border-radius: 13px;
+
+    background: #111722;
+
+  }
+
+
+  .efficiency-panel strong {
+
+    display: block;
+
+    margin-top: 5px;
+
+    font-size: 20px;
+
+  }
+
+
+  .ratio-track {
+
+    height: 9px;
+
+    margin-top: 13px;
+
+    overflow: hidden;
+
+    border-radius: 20px;
+
+    background: #252e3b;
+
+  }
+
+
+  #ratioFill {
+
+    width: 0;
+
+    height: 100%;
+
+    border-radius: 20px;
+
+    background: #78a3df;
+
+    transition: width .2s ease;
+
+  }
+
+
+  .efficiency-panel p {
+
+    margin:
+      10px 0 0;
+
+    color: #9ca7b7;
+
+    line-height: 1.5;
+
+  }
+
+
+  /* RETURN RESULT */
+
+  .return-result {
+
+    margin-top: 17px;
+
+    padding: 18px;
+
+    border:
+      1px solid #4d405f;
+
+    border-radius: 13px;
+
+    background: #171522;
+
+  }
+
+
+  .return-result strong {
+
+    display: block;
+
+    margin-top: 5px;
+
+    font-size: 20px;
+
+  }
+
+
+  .return-result p {
+
+    margin:
+      8px 0 0;
+
+    color: #aaaec0;
+
+    line-height: 1.55;
+
+  }
+
+
+  /* TEACHING */
+
+  .teaching-message {
+
+    margin-top: 17px;
+
+    padding: 19px;
+
+    border-left:
+      4px solid #74aaff;
+
+    border-radius: 9px;
+
+    background: #111a26;
+
+  }
+
+
+  .teaching-message strong {
+
+    font-size: 18px;
+
+  }
+
+
+  .teaching-message p {
+
+    margin:
+      8px 0 0;
+
+    color: #a6b0bf;
+
+    line-height: 1.6;
+
+  }
+
+
+  /* RESPONSIVE */
+
+  @media(max-width:850px) {
+
+    body {
+
+      padding: 13px;
+
+    }
+
+
+    .header {
+
+      flex-direction: column;
+
+      align-items: stretch;
+
+    }
+
+
+    .value-grid {
+
+      grid-template-columns:
+        repeat(2,1fr);
+
+    }
+
+
+    .comparison-panel {
+
+      grid-template-columns: 1fr;
+
+    }
+
+  }
+
+
+  @media(max-width:500px) {
+
+    .value-grid {
+
+      grid-template-columns: 1fr;
+
+    }
+
+
+    .panel-heading {
+
+      flex-direction: column;
+
+    }
+
+  }
+
+</style>
+
+
+<script>
+
+(() => {
+
+  /*
+  =========================================
+  GEOMETRY
+  =========================================
+  */
+
+  const svg =
+    document.getElementById(
+      "motionPlane"
+    );
+
+
+  const startX = 450;
+  const startY = 325;
+
+  const pixelsPerMetre = 40;
+
+  const planeMinX = 75;
+  const planeMaxX = 825;
+
+  const planeMinY = 75;
+  const planeMaxY = 575;
+
+
+  /*
+  =========================================
+  STATE
+  =========================================
+  */
+
+  let currentX = startX;
+  let currentY = startY;
+
+  let totalDistancePixels = 0;
+
+  let pathPoints = [
+    {
+      x: startX,
+      y: startY
+    }
+  ];
+
+  let dragging = false;
+
+  let returning = false;
+
+  let animationFrame = null;
+
+  let returnStartTime = null;
+
+  let returnFromX = startX;
+  let returnFromY = startY;
+
+  let returnPreviousX = startX;
+  let returnPreviousY = startY;
+
+
+  /*
+  =========================================
+  DOM
+  =========================================
+  */
+
+  const movingObject =
+    document.getElementById(
+      "movingObject"
+    );
+
+  const movingObjectInner =
+    document.getElementById(
+      "movingObjectInner"
+    );
+
+  const travelPath =
+    document.getElementById(
+      "travelPath"
+    );
+
+  const displacementLine =
+    document.getElementById(
+      "displacementLine"
+    );
+
+  const horizontalGuide =
+    document.getElementById(
+      "horizontalGuide"
+    );
+
+  const verticalGuide =
+    document.getElementById(
+      "verticalGuide"
+    );
+
+  const positionLabel =
+    document.getElementById(
+      "positionLabel"
+    );
+
+  const displacementLabel =
+    document.getElementById(
+      "displacementLabel"
+    );
+
+
+  /*
+  =========================================
+  SVG HELPER
+  =========================================
+  */
+
+  function svgElement(tag) {
+
+    return document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      tag
+    );
+
+  }
+
+
+  /*
+  =========================================
+  GRID
+  =========================================
+  */
+
+  function drawGrid() {
+
+    const grid =
+      document.getElementById(
+        "grid"
+      );
+
+
+    /*
+      Vertical lines
+    */
+
+    for (
+      let xMetres = -9;
+      xMetres <= 9;
+      xMetres++
+    ) {
+
+      if (xMetres === 0)
+        continue;
+
+
+      const x =
+        startX +
+        xMetres *
+        pixelsPerMetre;
+
+
+      const line =
+        svgElement("line");
+
+
+      line.setAttribute(
+        "x1",
+        x
+      );
+
+      line.setAttribute(
+        "x2",
+        x
+      );
+
+      line.setAttribute(
+        "y1",
+        60
+      );
+
+      line.setAttribute(
+        "y2",
+        590
+      );
+
+
+      line.setAttribute(
+        "class",
+        xMetres % 5 === 0
+          ? "grid-line-major"
+          : "grid-line"
+      );
+
+
+      grid.appendChild(
+        line
+      );
+
+
+      const label =
+        svgElement("text");
+
+
+      label.setAttribute(
+        "x",
+        x
+      );
+
+      label.setAttribute(
+        "y",
+        startY + 20
+      );
+
+      label.setAttribute(
+        "text-anchor",
+        "middle"
+      );
+
+      label.setAttribute(
+        "class",
+        "grid-label"
+      );
+
+
+      label.textContent =
+        xMetres;
+
+
+      grid.appendChild(
+        label
+      );
+
+    }
+
+
+    /*
+      Horizontal lines
+    */
+
+    for (
+      let yMetres = -6;
+      yMetres <= 6;
+      yMetres++
+    ) {
+
+      if (yMetres === 0)
+        continue;
+
+
+      const y =
+        startY -
+        yMetres *
+        pixelsPerMetre;
+
+
+      const line =
+        svgElement("line");
+
+
+      line.setAttribute(
+        "x1",
+        60
+      );
+
+      line.setAttribute(
+        "x2",
+        840
+      );
+
+      line.setAttribute(
+        "y1",
+        y
+      );
+
+      line.setAttribute(
+        "y2",
+        y
+      );
+
+
+      line.setAttribute(
+        "class",
+        yMetres % 5 === 0
+          ? "grid-line-major"
+          : "grid-line"
+      );
+
+
+      grid.appendChild(
+        line
+      );
+
+
+      const label =
+        svgElement("text");
+
+
+      label.setAttribute(
+        "x",
+        startX - 12
+      );
+
+      label.setAttribute(
+        "y",
+        y + 4
+      );
+
+      label.setAttribute(
+        "text-anchor",
+        "end"
+      );
+
+      label.setAttribute(
+        "class",
+        "grid-label"
+      );
+
+
+      label.textContent =
+        yMetres;
+
+
+      grid.appendChild(
+        label
+      );
+
+    }
+
+  }
+
+
+  /*
+  =========================================
+  COORDINATES
+  =========================================
+  */
+
+  function screenToPhysicsX(x) {
+
+    return (
+      x -
+      startX
+    ) /
+    pixelsPerMetre;
+
+  }
+
+
+  function screenToPhysicsY(y) {
+
+    return (
+      startY -
+      y
+    ) /
+    pixelsPerMetre;
+
+  }
+
+
+  function distanceBetween(
+    x1,
+    y1,
+    x2,
+    y2
+  ) {
+
+    return Math.hypot(
+      x2 - x1,
+      y2 - y1
+    );
+
+  }
+
+
+  /*
+  =========================================
+  POINTER COORDINATES
+  =========================================
+  */
+
+  function pointerToSVG(
+    event
+  ) {
+
+    const point =
+      svg.createSVGPoint();
+
+
+    point.x =
+      event.clientX;
+
+    point.y =
+      event.clientY;
+
+
+    return point.matrixTransform(
+      svg
+        .getScreenCTM()
+        .inverse()
+    );
+
+  }
+
+
+  /*
+  =========================================
+  PATH
+  =========================================
+  */
+
+  function rebuildPath() {
+
+    travelPath.setAttribute(
+      "points",
+      pathPoints
+        .map(
+          point =>
+            `${point.x},${point.y}`
+        )
+        .join(" ")
+    );
+
+  }
+
+
+  function appendPathPoint(
+    x,
+    y,
+    force = false
+  ) {
+
+    const last =
+      pathPoints[
+        pathPoints.length - 1
+      ];
+
+
+    const segment =
+      distanceBetween(
+        last.x,
+        last.y,
+        x,
+        y
+      );
+
+
+    /*
+      Ignore tiny pointer jitter.
+
+      About 2 screen pixels = 0.05 m.
+    */
+
+    if (
+      !force &&
+      segment < 2
+    ) {
+
+      return;
+
+    }
+
+
+    totalDistancePixels +=
+      segment;
+
+
+    pathPoints.push(
+      {
+        x: x,
+        y: y
+      }
+    );
+
+
+    rebuildPath();
+
+  }
+
+
+  /*
+  =========================================
+  UPDATE DISPLAY
+  =========================================
+  */
+
+  function update() {
+
+    const dx =
+      screenToPhysicsX(
+        currentX
+      );
+
+    const dy =
+      screenToPhysicsY(
+        currentY
+      );
+
+
+    const displacement =
+      Math.hypot(
+        dx,
+        dy
+      );
+
+
+    const distance =
+      totalDistancePixels /
+      pixelsPerMetre;
+
+
+    /*
+      Object
+    */
+
+    movingObject.setAttribute(
+      "cx",
+      currentX
+    );
+
+    movingObject.setAttribute(
+      "cy",
+      currentY
+    );
+
+
+    movingObjectInner.setAttribute(
+      "cx",
+      currentX
+    );
+
+    movingObjectInner.setAttribute(
+      "cy",
+      currentY
+    );
+
+
+    /*
+      Displacement vector
+    */
+
+    displacementLine.setAttribute(
+      "x1",
+      startX
+    );
+
+    displacementLine.setAttribute(
+      "y1",
+      startY
+    );
+
+    displacementLine.setAttribute(
+      "x2",
+      currentX
+    );
+
+    displacementLine.setAttribute(
+      "y2",
+      currentY
+    );
+
+
+    /*
+      Component guides
+    */
+
+    horizontalGuide.setAttribute(
+      "x1",
+      startX
+    );
+
+    horizontalGuide.setAttribute(
+      "y1",
+      startY
+    );
+
+    horizontalGuide.setAttribute(
+      "x2",
+      currentX
+    );
+
+    horizontalGuide.setAttribute(
+      "y2",
+      startY
+    );
+
+
+    verticalGuide.setAttribute(
+      "x1",
+      currentX
+    );
+
+    verticalGuide.setAttribute(
+      "y1",
+      startY
+    );
+
+    verticalGuide.setAttribute(
+      "x2",
+      currentX
+    );
+
+    verticalGuide.setAttribute(
+      "y2",
+      currentY
+    );
+
+
+    /*
+      Labels
+    */
+
+    positionLabel.setAttribute(
+      "x",
+      currentX
+    );
+
+
+    positionLabel.setAttribute(
+      "y",
+      Math.max(
+        38,
+        currentY - 38
+      )
+    );
+
+
+    positionLabel.textContent =
+      "(" +
+      dx.toFixed(2) +
+      ", " +
+      dy.toFixed(2) +
+      ") m";
+
+
+    /*
+      Displacement label sits near
+      the middle of the straight vector.
+    */
+
+    const midX =
+      (
+        startX +
+        currentX
+      ) / 2;
+
+    const midY =
+      (
+        startY +
+        currentY
+      ) / 2;
+
+
+    displacementLabel.setAttribute(
+      "x",
+      midX
+    );
+
+    displacementLabel.setAttribute(
+      "y",
+      midY - 12
+    );
+
+
+    displacementLabel.textContent =
+      displacement > 0.08
+        ? "|Δr| = " +
+          displacement.toFixed(2) +
+          " m"
+        : "";
+
+
+    /*
+      Cards
+    */
+
+    document
+      .getElementById(
+        "distanceValue"
+      )
+      .textContent =
+        distance.toFixed(2) +
+        " m";
+
+
+    document
+      .getElementById(
+        "displacementValue"
+      )
+      .textContent =
+        displacement.toFixed(2) +
+        " m";
+
+
+    document
+      .getElementById(
+        "dxValue"
+      )
+      .textContent =
+        signed(dx) +
+        " m";
+
+
+    document
+      .getElementById(
+        "dyValue"
+      )
+      .textContent =
+        signed(dy) +
+        " m";
+
+
+    /*
+      Equations
+    */
+
+    document
+      .getElementById(
+        "distanceEquation"
+      )
+      .textContent =
+        "d = " +
+        distance.toFixed(2) +
+        " m";
+
+
+    document
+      .getElementById(
+        "displacementEquation"
+      )
+      .textContent =
+        "|Δr| = √(" +
+        dx.toFixed(2) +
+        "² + " +
+        dy.toFixed(2) +
+        "²) = " +
+        displacement.toFixed(2) +
+        " m";
+
+
+    document
+      .getElementById(
+        "inequalityDisplay"
+      )
+      .textContent =
+        distance.toFixed(2) +
+        " ≥ " +
+        displacement.toFixed(2);
+
+
+    /*
+      Journey directness
+
+      displacement / distance <= 1
+    */
+
+    const ratio =
+      distance > 0.001
+        ? displacement /
+          distance
+        : 0;
+
+
+    const percentage =
+      Math.max(
+        0,
+        Math.min(
+          100,
+          ratio * 100
+        )
+      );
+
+
+    document
+      .getElementById(
+        "ratioFill"
+      )
+      .style.width =
+        percentage + "%";
+
+
+    const routeRatio =
+      document.getElementById(
+        "routeRatio"
+      );
+
+
+    const ratioExplanation =
+      document.getElementById(
+        "ratioExplanation"
+      );
+
+
+    if (
+      distance < 0.05
+    ) {
+
+      routeRatio.textContent =
+        "No journey yet";
+
+
+      ratioExplanation.textContent =
+        "Start dragging the object to create a travelled path.";
+
+    }
+
+    else if (
+      displacement < 0.05
+    ) {
+
+      routeRatio.textContent =
+        "0% direct";
+
+
+      ratioExplanation.textContent =
+        "You have returned to the starting point. Displacement is zero even though a non-zero distance was travelled.";
+
+    }
+
+    else {
+
+      routeRatio.textContent =
+        percentage.toFixed(1) +
+        "% direct";
+
+
+      if (
+        percentage > 98
+      ) {
+
+        ratioExplanation.textContent =
+          "This journey is almost straight, so distance and displacement magnitude are nearly equal.";
+
+      }
+
+      else if (
+        percentage > 65
+      ) {
+
+        ratioExplanation.textContent =
+          "The route contains some detour, so distance is now larger than displacement.";
+
+      }
+
+      else if (
+        percentage > 30
+      ) {
+
+        ratioExplanation.textContent =
+          "A substantial part of the travelled path does not contribute to the final straight-line separation.";
+
+      }
+
+      else {
+
+        ratioExplanation.textContent =
+          "The route is highly indirect. Distance can become very large while displacement remains comparatively small.";
+
+      }
+
+    }
+
+
+    /*
+      Status and teaching text
+    */
+
+    updateTeachingText(
+      distance,
+      displacement
+    );
+
+  }
+
+
+  /*
+  =========================================
+  SIGNED NUMBER
+  =========================================
+  */
+
+  function signed(
+    value
+  ) {
+
+    if (
+      Math.abs(value) <
+      0.005
+    ) {
+
+      value = 0;
+
+    }
+
+
+    if (value > 0) {
+
+      return "+" +
+        value.toFixed(2);
+
+    }
+
+
+    return value.toFixed(2);
+
+  }
+
+
+  /*
+  =========================================
+  TEACHING TEXT
+  =========================================
+  */
+
+  function updateTeachingText(
+    distance,
+    displacement
+  ) {
+
+    const badge =
+      document.getElementById(
+        "statusBadge"
+      );
+
+    const title =
+      document.getElementById(
+        "teachingTitle"
+      );
+
+    const text =
+      document.getElementById(
+        "teachingText"
+      );
+
+    const returnText =
+      document.getElementById(
+        "returnResultText"
+      );
+
+
+    if (
+      distance < 0.05
+    ) {
+
+      badge.textContent =
+        "At the starting point";
+
+
+      title.textContent =
+        "Distance remembers the route. Displacement remembers only the endpoints.";
+
+
+      text.textContent =
+        "Drag the object through the plane. The blue path will record every part of the journey while the gold displacement arrow always connects the start directly to the current position.";
+
+
+      returnText.textContent =
+        "Return to the starting position after travelling a non-zero path to see the distinction.";
+
+      return;
+
+    }
+
+
+    if (
+      displacement < 0.05
+    ) {
+
+      badge.textContent =
+        "Returned to start";
+
+
+      title.textContent =
+        "The journey can have zero displacement without zero distance.";
+
+
+      text.textContent =
+        "The final position equals the initial position, so Δr = 0. But the object actually travelled along the entire blue path, so the distance remains positive.";
+
+
+      returnText.textContent =
+        "This journey ended where it began: |Δr| = 0 m while d = " +
+        distance.toFixed(2) +
+        " m.";
+
+      return;
+
+    }
+
+
+    const difference =
+      distance -
+      displacement;
+
+
+    if (
+      difference < 0.08
+    ) {
+
+      badge.textContent =
+        "Nearly straight path";
+
+
+      title.textContent =
+        "A straight route is the special case where d = |Δr|.";
+
+
+      text.textContent =
+        "When the object travels directly from the starting point to the ending point, the length of the travelled path equals the straight-line separation.";
+
+    }
+
+    else {
+
+      badge.textContent =
+        "d > |Δr|";
+
+
+      title.textContent =
+        "Every detour increases distance without necessarily increasing displacement.";
+
+
+      text.textContent =
+        "The blue route contains more path than is required to connect the two endpoints. That is why distance is larger than the magnitude of displacement.";
+
+    }
+
+
+    returnText.textContent =
+      "Press Return to start after making a winding path. The object will travel back to the origin, increasing distance further while its displacement falls to zero.";
+
+  }
+
+
+  /*
+  =========================================
+  DRAGGING
+  =========================================
+  */
+
+  function clamp(
+    value,
+    min,
+    max
+  ) {
+
+    return Math.min(
+      max,
+      Math.max(
+        min,
+        value
+      )
+    );
+
+  }
+
+
+  function moveToPointer(
+    event
+  ) {
+
+    if (returning)
+      return;
+
+
+    const point =
+      pointerToSVG(
+        event
+      );
+
+
+    const newX =
+      clamp(
+        point.x,
+        planeMinX,
+        planeMaxX
+      );
+
+
+    const newY =
+      clamp(
+        point.y,
+        planeMinY,
+        planeMaxY
+      );
+
+
+    appendPathPoint(
+      newX,
+      newY
+    );
+
+
+    currentX =
+      newX;
+
+    currentY =
+      newY;
+
+
+    update();
+
+  }
+
+
+  movingObject.addEventListener(
+    "pointerdown",
+    event => {
+
+      if (returning)
+        return;
+
+
+      dragging = true;
+
+
+      movingObject
+        .setPointerCapture(
+          event.pointerId
+        );
+
+
+      event.preventDefault();
+
+    }
+  );
+
+
+  svg.addEventListener(
+    "pointermove",
+    event => {
+
+      if (!dragging)
+        return;
+
+
+      moveToPointer(
+        event
+      );
+
+    }
+  );
+
+
+  svg.addEventListener(
+    "pointerup",
+    event => {
+
+      dragging = false;
+
+
+      if (
+        movingObject
+          .hasPointerCapture(
+            event.pointerId
+          )
+      ) {
+
+        movingObject
+          .releasePointerCapture(
+            event.pointerId
+          );
+
+      }
+
+    }
+  );
+
+
+  svg.addEventListener(
+    "pointercancel",
+    () => {
+
+      dragging = false;
+
+    }
+  );
+
+
+  /*
+    Click/tap on the plane also creates
+    a straight travelled segment.
+
+    This provides a non-drag alternative.
+  */
+
+  svg.addEventListener(
+    "pointerdown",
+    event => {
+
+      if (
+        event.target === movingObject
+      ) {
+
+        return;
+
+      }
+
+
+      if (returning)
+        return;
+
+
+      const point =
+        pointerToSVG(
+          event
+        );
+
+
+      const newX =
+        clamp(
+          point.x,
+          planeMinX,
+          planeMaxX
+        );
+
+
+      const newY =
+        clamp(
+          point.y,
+          planeMinY,
+          planeMaxY
+        );
+
+
+      appendPathPoint(
+        newX,
+        newY,
+        true
+      );
+
+
+      currentX =
+        newX;
+
+      currentY =
+        newY;
+
+
+      update();
+
+    }
+  );
+
+
+  /*
+  =========================================
+  RETURN TO START
+  =========================================
+  */
+
+  function easeInOut(
+    p
+  ) {
+
+    return (
+      p < 0.5
+        ? 2 * p * p
+        : 1 -
+          Math.pow(
+            -2 * p + 2,
+            2
+          ) / 2
+    );
+
+  }
+
+
+  function animateReturn(
+    timestamp
+  ) {
+
+    if (!returning)
+      return;
+
+
+    if (
+      returnStartTime === null
+    ) {
+
+      returnStartTime =
+        timestamp;
+
+    }
+
+
+    const duration =
+      1300;
+
+
+    const rawProgress =
+      Math.min(
+        1,
+        (
+          timestamp -
+          returnStartTime
+        ) /
+        duration
+      );
+
+
+    const progress =
+      easeInOut(
+        rawProgress
+      );
+
+
+    const newX =
+      returnFromX +
+      (
+        startX -
+        returnFromX
+      ) *
+      progress;
+
+
+    const newY =
+      returnFromY +
+      (
+        startY -
+        returnFromY
+      ) *
+      progress;
+
+
+    const travelledSegment =
+      distanceBetween(
+        returnPreviousX,
+        returnPreviousY,
+        newX,
+        newY
+      );
+
+
+    totalDistancePixels +=
+      travelledSegment;
+
+
+    /*
+      Store enough points to visibly draw
+      the return segment.
+    */
+
+    if (
+      travelledSegment >= 1
+    ) {
+
+      pathPoints.push(
+        {
+          x: newX,
+          y: newY
+        }
+      );
+
+
+      rebuildPath();
+
+    }
+
+
+    returnPreviousX =
+      newX;
+
+    returnPreviousY =
+      newY;
+
+
+    currentX =
+      newX;
+
+    currentY =
+      newY;
+
+
+    update();
+
+
+    if (
+      rawProgress < 1
+    ) {
+
+      animationFrame =
+        requestAnimationFrame(
+          animateReturn
+        );
+
+    }
+
+    else {
+
+      currentX =
+        startX;
+
+      currentY =
+        startY;
+
+
+      pathPoints.push(
+        {
+          x: startX,
+          y: startY
+        }
+      );
+
+
+      rebuildPath();
+
+
+      returning =
+        false;
+
+      returnStartTime =
+        null;
+
+
+      update();
+
+    }
+
+  }
+
+
+  function returnToStart() {
+
+    if (returning)
+      return;
+
+
+    const displacementPixels =
+      distanceBetween(
+        currentX,
+        currentY,
+        startX,
+        startY
+      );
+
+
+    if (
+      displacementPixels <
+      1
+    ) {
+
+      update();
+
+      return;
+
+    }
+
+
+    dragging =
+      false;
+
+
+    returning =
+      true;
+
+
+    returnStartTime =
+      null;
+
+
+    returnFromX =
+      currentX;
+
+    returnFromY =
+      currentY;
+
+
+    returnPreviousX =
+      currentX;
+
+    returnPreviousY =
+      currentY;
+
+
+    animationFrame =
+      requestAnimationFrame(
+        animateReturn
+      );
+
+  }
+
+
+  /*
+  =========================================
+  RESET
+  =========================================
+  */
+
+  function stopAnimation() {
+
+    returning =
+      false;
+
+    returnStartTime =
+      null;
+
+
+    if (
+      animationFrame
+    ) {
+
+      cancelAnimationFrame(
+        animationFrame
+      );
+
+    }
+
+  }
+
+
+  function resetJourney() {
+
+    stopAnimation();
+
+
+    currentX =
+      startX;
+
+    currentY =
+      startY;
+
+
+    totalDistancePixels =
+      0;
+
+
+    pathPoints = [
+      {
+        x: startX,
+        y: startY
+      }
+    ];
+
+
+    rebuildPath();
+
+    update();
+
+  }
+
+
+  /*
+    Clears historical distance/path but
+    makes the current position the new
+    starting point of a fresh route visually.
+
+    The original displacement origin remains
+    fixed, because this simulator's central
+    comparison uses one fixed journey origin.
+
+    Therefore only the blue trail is cleared;
+    cumulative d is reset to zero from the
+    current point onward.
+  */
+
+  function clearTrail() {
+
+    stopAnimation();
+
+
+    totalDistancePixels =
+      0;
+
+
+    pathPoints = [
+      {
+        x: currentX,
+        y: currentY
+      }
+    ];
+
+
+    rebuildPath();
+
+    update();
+
+  }
+
+
+  /*
+  =========================================
+  BUTTONS
+  =========================================
+  */
+
+  document
+    .getElementById(
+      "returnButton"
+    )
+    .addEventListener(
+      "click",
+      returnToStart
+    );
+
+
+  document
+    .getElementById(
+      "resetButton"
+    )
+    .addEventListener(
+      "click",
+      resetJourney
+    );
+
+
+  document
+    .getElementById(
+      "clearTrailButton"
+    )
+    .addEventListener(
+      "click",
+      clearTrail
+    );
+
+
+  /*
+  =========================================
+  INITIALISE
+  =========================================
+  */
+
+  drawGrid();
+
+  rebuildPath();
+
+  update();
+
+})();
+</script>
